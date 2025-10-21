@@ -65,13 +65,13 @@ Add `22digital/laravel-cashier-fastspring` package to your dependencies.
 composer require "22digital/laravel-cashier-fastspring"
 ```
 
-After requiring package, add service provider of this package to providers in `config/app.php`.
+After requiring package, add service provider of this package to providers in `bootstrap/providers.php`.
 
 ```php
-'providers' => array(
+return [
     // ...
     TwentyTwoDigital\CashierFastspring\CashierServiceProvider::class,
-)
+];
 ```
 
 ## Configuration
