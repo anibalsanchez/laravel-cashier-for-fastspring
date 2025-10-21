@@ -65,6 +65,31 @@ Add `22digital/laravel-cashier-fastspring` package to your dependencies.
 composer require "22digital/laravel-cashier-fastspring"
 ```
 
+> NOTE: The above command won't work if you want to use a fork of
+> `laravel-cashier-fastspring`. To reference a fork instead of the original
+> project, customize the `repositories` section in your Laravel app's
+> `composer.json` file (replace `USERNAME` with the appropriate GitHub username
+> for the fork that you want to use).
+>
+> ```json
+> "repositories": [
+>     {
+>         "type": "vcs",
+>         "url": "https://github.com/USERNAME/laravel-cashier-fastspring.git"
+>     }
+> ],
+> ```
+>
+> Then add the `laravel-cashier-fastspring` to the `require` section (in this
+> case, use the original `22digital` username, but replace `BRANCHNAME` with the
+> fork's branch name):
+>
+> ```json
+> "require": {
+>     "22digital/laravel-cashier-fastspring": "dev-BRANCHNAME"
+> }
+> ```
+
 After requiring package, add service provider of this package to providers in `bootstrap/providers.php`.
 
 ```php
