@@ -1,15 +1,6 @@
 <?php
-/**
- * This file implements Webhook Controller.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring\Http\Controllers;
+namespace Photalika\CashierForFastspring\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
@@ -17,9 +8,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Log;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Fastspring\Fastspring;
 use Symfony\Component\HttpFoundation\Response;
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Fastspring\Fastspring;
 
 /**
  * Controls the data flow into a webhook object and updates the view
@@ -32,13 +23,11 @@ class WebhookController extends Controller
     /**
      * Handle a Fastspring webhook call.
      *
-     * @param \Illuminate\Http\Request $request The webhook requet
+     * @param  \Illuminate\Http\Request  $request  The webhook requet
      *
      * @throws Exception
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handleWebhook(Request $request)
+    public function handleWebhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $payload = json_decode($request->getContent(), true);
 
@@ -55,7 +44,7 @@ class WebhookController extends Controller
             $signature = $request->header('X-FS-Signature');
 
             // generate signature to check
-            $generatedSignature = base64_encode(hash_hmac('sha256', $request->getContent(), $hmacSecret, true));
+            $generatedSignature = base64_encode(hash_hmac('sha256', $request->getContent(), (string) $hmacSecret, true));
 
             // check if equals
             if ($signature != $generatedSignature) {
@@ -69,13 +58,13 @@ class WebhookController extends Controller
         // iterate and trigger events
         foreach ($payload['events'] as $event) {
             // prepare category event class names like OrderAny
-            $explodedType = explode('.', $event['type']);
+            $explodedType = explode('.', (string) $event['type']);
             $category = array_shift($explodedType);
-            $categoryEvent = '\TwentyTwoDigital\CashierFastspring\Events\\' . Str::studly($category) . 'Any';
+            $categoryEvent = '\Photalika\CashierForFastspring\Events\\'.Str::studly($category).'Any';
 
             // prepare category event class names like activity
             $activity = str_replace('.', ' ', $event['type']);
-            $activityEvent = '\TwentyTwoDigital\CashierFastspring\Events\\' . Str::studly($activity);
+            $activityEvent = '\Photalika\CashierForFastspring\Events\\'.Str::studly($activity);
 
             // there may be some exceptions on events
             // so if anything goes bad its ID won't be added on the successfullEvents
@@ -84,8 +73,8 @@ class WebhookController extends Controller
             try {
                 // check if the related event classes are exist
                 // there may be not handled events
-                if (!class_exists($categoryEvent) || !class_exists($activityEvent)) {
-                    throw new Exception('There is no event for ' . $event['type']);
+                if (! class_exists($categoryEvent) || ! class_exists($activityEvent)) {
+                    throw new Exception('There is no event for '.$event['type']);
                 }
 
                 // trigger events

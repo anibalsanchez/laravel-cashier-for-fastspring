@@ -1,21 +1,12 @@
 <?php
-/**
- * This file implements Subscription Charge Completed.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring\Listeners;
+namespace Photalika\CashierForFastspring\Listeners;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Invoice;
-use TwentyTwoDigital\CashierFastspring\Subscription;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Invoice;
+use Photalika\CashierForFastspring\Subscription;
 
 /**
  * This class is a listener for subscription charge completed events.
@@ -30,8 +21,6 @@ class SubscriptionChargeCompleted extends Base
 {
     /**
      * Create the event listener.
-     *
-     * @return null
      */
     public function __construct()
     {
@@ -40,21 +29,17 @@ class SubscriptionChargeCompleted extends Base
 
     /**
      * Handle the event.
-     *
-     * @param \TwentyTwoDigital\CashierFastspring\Events\SubscriptionChargeCompleted $event
-     *
-     * @return void
      */
-    public function handle(Events\SubscriptionChargeCompleted $event)
+    public function handle(Events\SubscriptionChargeCompleted $subscriptionChargeCompleted): void
     {
         // when subscription charge completed event is triggered
         // try to find that order on the database
         // if not exists then create one
-        $data = $event->data;
+        $data = $subscriptionChargeCompleted->data;
 
         $invoice = Invoice::firstOrNew([
             'fastspring_id' => $data['order']['id'],
-            'type'          => 'subscription',
+            'type' => 'subscription',
         ]);
 
         // retrieve subscription to change state of it
@@ -67,7 +52,7 @@ class SubscriptionChargeCompleted extends Base
         $periodEndDate = $nextDate->subDay()->format('Y-m-d H:i:s');
 
         // yeap, weird way
-        $methodName = 'sub' . Str::title($subscription->interval_unit) . 'sNoOverflow';
+        $methodName = 'sub'.Str::title($subscription->interval_unit).'sNoOverflow';
         $periodStartDate = $nextDate->$methodName($subscription->interval_length)->addDay()->format('Y-m-d H:i:s');
 
         // fill the model

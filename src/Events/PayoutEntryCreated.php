@@ -1,7 +1,5 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Events;
+namespace Photalika\CashierForFastspring\Events;
 
-class PayoutEntryCreated extends Base
-{
-}
+class PayoutEntryCreated extends Base {}

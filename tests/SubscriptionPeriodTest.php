@@ -1,27 +1,24 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Orchestra\Testbench\TestCase;
-use TwentyTwoDigital\CashierFastspring\SubscriptionPeriod;
-use TwentyTwoDigital\CashierFastspring\Tests\Traits\Database;
-use TwentyTwoDigital\CashierFastspring\Tests\Traits\Model;
+use Photalika\CashierForFastspring\SubscriptionPeriod;
+use Photalika\CashierForFastspring\Tests\Traits\Database;
+use Photalika\CashierForFastspring\Tests\Traits\Model;
 
 class SubscriptionPeriodTest extends TestCase
 {
     use Database;
     use Model;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        if (file_exists(__DIR__ . '/.env')) {
-            $dotenv = \Dotenv\Dotenv::create(__DIR__);
-            $dotenv->load();
-        }
+        configureEnv();
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,14 +34,14 @@ class SubscriptionPeriodTest extends TestCase
     /**
      * Tests.
      */
-    public function testSubscriptionPeriodCanBeConstructed()
+    public function test_subscription_period_can_be_constructed(): void
     {
-        $this->assertInstanceOf(SubscriptionPeriod::class, new SubscriptionPeriod());
+        $this->assertInstanceOf(SubscriptionPeriod::class, new SubscriptionPeriod);
     }
 
-    public function testSubscriptionPeriodCanBeInserted()
+    public function test_subscription_period_can_be_inserted(): void
     {
-        $email = 'bilal@gultekin.me';
+        $email = 'test@test-email.me';
 
         $user = $this->createUser(['email' => $email, 'fastspring_id' => 'fastspring_id']);
         $subscription = $this->createSubscription($user, ['state' => 'active']);

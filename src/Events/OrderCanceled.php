@@ -1,7 +1,5 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Events;
+namespace Photalika\CashierForFastspring\Events;
 
-class OrderCanceled extends Base
-{
-}
+class OrderCanceled extends Base {}

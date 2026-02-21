@@ -1,18 +1,9 @@
 <?php
-/**
- * This file implements Subscription Deactivated.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring\Listeners;
+namespace Photalika\CashierForFastspring\Listeners;
 
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Subscription;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Subscription;
 
 /**
  * This class is a listener for subscription deactivation events.
@@ -24,8 +15,6 @@ class SubscriptionDeactivated extends Base
 {
     /**
      * Create the event listener.
-     *
-     * @return null
      */
     public function __construct()
     {
@@ -34,14 +23,10 @@ class SubscriptionDeactivated extends Base
 
     /**
      * Handle the event.
-     *
-     * @param \TwentyTwoDigital\CashierFastspring\Events\Base $event
-     *
-     * @return void
      */
-    public function handle(Events\Base $event)
+    public function handle(Events\Base $base): void
     {
-        $data = $event->data;
+        $data = $base->data;
 
         // now this code only convert state into deactivated
         // you may want to do something special to your project

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInvoicesTableForCashierFastspring extends Migration
+class CreateInvoicesTableForCashierForFastspring extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateInvoicesTableForCashierFastspring extends Migration
      */
     public function up()
     {
-        Schema::create('invoices', function(Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->string('fastspring_id')->nullable();

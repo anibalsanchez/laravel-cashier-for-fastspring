@@ -1,31 +1,28 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Orchestra\Testbench\TestCase;
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Fastspring\Fastspring;
-use TwentyTwoDigital\CashierFastspring\Invoice;
-use TwentyTwoDigital\CashierFastspring\Listeners;
-use TwentyTwoDigital\CashierFastspring\Subscription;
-use TwentyTwoDigital\CashierFastspring\Tests\Traits\Database;
-use TwentyTwoDigital\CashierFastspring\Tests\Traits\Model;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Fastspring\Fastspring;
+use Photalika\CashierForFastspring\Invoice;
+use Photalika\CashierForFastspring\Listeners;
+use Photalika\CashierForFastspring\Subscription;
+use Photalika\CashierForFastspring\Tests\Traits\Database;
+use Photalika\CashierForFastspring\Tests\Traits\Model;
 
 class ListenersTest extends TestCase
 {
     use Database;
     use Model;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        if (file_exists(__DIR__ . '/.env')) {
-            $dotenv = \Dotenv\Dotenv::create(__DIR__);
-            $dotenv->load();
-        }
+        configureEnv();
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -41,28 +38,28 @@ class ListenersTest extends TestCase
     /**
      * Tests.
      */
-    public function testOrderCompleteListener()
+    public function test_order_complete_listener(): void
     {
-        $user = $this->createUser(['fastspring_id' => 'fastspring_id']);
+        $this->createUser(['fastspring_id' => 'fastspring_id']);
         // retrieved from fastspring's doc
         $data = $this->payloadOfOrderCompleted('fastspring_id');
 
         $event = new Events\OrderCompleted('id', 'order.completed', true, true, time(), $data);
-        $listener = new Listeners\OrderCompleted();
+        $listener = new Listeners\OrderCompleted;
         $listener->handle($event);
 
         $invoice = Invoice::where('fastspring_id', $data['id'])->first();
         $this->assertNotNull($invoice);
     }
 
-    public function testSubscriptionActivatedListener()
+    public function test_subscription_activated_listener(): void
     {
-        $user = $this->createUser(['fastspring_id' => 'fastspring_id']);
+        $this->createUser(['fastspring_id' => 'fastspring_id']);
         // retrieved from fastspring's doc
         $data = $this->payloadOfSubscriptionActivated('fastspring_id');
 
         $event = new Events\SubscriptionActivated('id', 'subscription.activated', true, true, time(), $data);
-        $listener = new Listeners\SubscriptionActivated();
+        $listener = new Listeners\SubscriptionActivated;
         $listener->handle($event);
 
         $subscription = Subscription::where('fastspring_id', $data['id'])->first();
@@ -71,10 +68,10 @@ class ListenersTest extends TestCase
         $this->assertEquals($subscription->periods->count(), 1);
     }
 
-    public function testSubscriptionChargeCompletedListener()
+    public function test_subscription_charge_completed_listener(): void
     {
         $user = $this->createUser(['fastspring_id' => 'fastspring_id']);
-        $subscription = $this->createSubscription($user, ['state' => 'overdue', 'fastspring_id' => 'subscription_id']);
+        $this->createSubscription($user, ['state' => 'overdue', 'fastspring_id' => 'subscription_id']);
 
         // retrieved from fastspring's doc
         $data = $this->payloadOfSubscriptionChargeCompleted('subscription_id', 'fastspring_id');
@@ -87,14 +84,14 @@ class ListenersTest extends TestCase
             time(),
             $data
         );
-        $listener = new Listeners\SubscriptionChargeCompleted();
+        $listener = new Listeners\SubscriptionChargeCompleted;
         $listener->handle($event);
 
         $invoice = Invoice::where('fastspring_id', $data['order']['id'])->first();
         $this->assertNotNull($invoice);
     }
 
-    public function testSubscriptionStateChangeListener()
+    public function test_subscription_state_change_listener(): void
     {
         $user = $this->createUser(['fastspring_id' => 'fastspring_account_id']);
         $subscription = $this->createSubscription($user, ['fastspring_id' => 'fastspring_subscription_id']);
@@ -102,16 +99,16 @@ class ListenersTest extends TestCase
         // retrieved from fastspring's doc
         $data = $this->payloadOfSubscriptionCanceled('fastspring_subscription_id', 'fastspring_account_id');
 
-        $event = new Events\SubscriptionCanceled('id', 'subscription.canceled', true, true, time(), $data);
-        $listener = new Listeners\SubscriptionStateChanged();
-        $listener->handle($event);
+        $subscriptionCanceled = new Events\SubscriptionCanceled('id', 'subscription.canceled', true, true, time(), $data);
+        $subscriptionStateChanged = new Listeners\SubscriptionStateChanged;
+        $subscriptionStateChanged->handle($subscriptionCanceled);
 
         $subscription = Subscription::where('fastspring_id', $data['id'])->first();
         $this->assertNotNull($subscription);
         $this->assertEquals($subscription->state, $data['state']);
     }
 
-    public function testSubscriptionDeactivatedListener()
+    public function test_subscription_deactivated_listener(): void
     {
         $user = $this->createUser(['fastspring_id' => 'fastspring_id']);
         $subscription = $this->createSubscription($user, ['fastspring_id' => 'fastspring_subscription_id']);
@@ -120,7 +117,7 @@ class ListenersTest extends TestCase
         $data = $this->payloadOfSubscriptionDeactivated('fastspring_id', 'fastspring_subscription_id');
 
         $event = new Events\SubscriptionDeactivated('id', 'subscription.activated', true, true, time(), $data);
-        $listener = new Listeners\SubscriptionDeactivated();
+        $listener = new Listeners\SubscriptionDeactivated;
         $listener->handle($event);
 
         $subscription = Subscription::where('fastspring_id', $data['id'])->first();
@@ -131,56 +128,56 @@ class ListenersTest extends TestCase
     /**
      * Payload from fastspring.
      */
-    protected function payloadOfSubscriptionCanceled($subscriptionId, $accountId)
+    protected function payloadOfSubscriptionCanceled($subscriptionId, $accountId): mixed
     {
-        $template = file_get_contents(__DIR__ . '/Payloads/subscription_canceled.json');
+        $template = file_get_contents(__DIR__.'/Payloads/subscription_canceled.json');
         $jsonString = $this->renderTemplate(
             $template,
             ['subscriptionId' => $subscriptionId, 'accountId' => $accountId]
         );
 
-        return json_decode($jsonString, true);
+        return json_decode((string) $jsonString, true);
     }
 
-    protected function payloadOfSubscriptionActivated($accountId)
+    protected function payloadOfSubscriptionActivated($accountId): mixed
     {
-        $template = file_get_contents(__DIR__ . '/Payloads/subscription_activated.json');
+        $template = file_get_contents(__DIR__.'/Payloads/subscription_activated.json');
         $jsonString = $this->renderTemplate($template, ['accountId' => $accountId]);
 
-        return json_decode($jsonString, true);
+        return json_decode((string) $jsonString, true);
     }
 
-    protected function payloadOfSubscriptionDeactivated($accountId, $subscriptionId)
+    protected function payloadOfSubscriptionDeactivated($accountId, $subscriptionId): mixed
     {
-        $template = file_get_contents(__DIR__ . '/Payloads/subscription_deactivated.json');
+        $template = file_get_contents(__DIR__.'/Payloads/subscription_deactivated.json');
         $jsonString = $this->renderTemplate($template, [
-            'accountId'      => $accountId,
+            'accountId' => $accountId,
             'subscriptionId' => $subscriptionId,
         ]);
 
-        return json_decode($jsonString, true);
+        return json_decode((string) $jsonString, true);
     }
 
-    protected function payloadOfSubscriptionChargeCompleted($subscriptionId, $accountId)
+    protected function payloadOfSubscriptionChargeCompleted($subscriptionId, $accountId): mixed
     {
-        $template = file_get_contents(__DIR__ . '/Payloads/subscription_charge_completed.json');
+        $template = file_get_contents(__DIR__.'/Payloads/subscription_charge_completed.json');
         $jsonString = $this->renderTemplate(
             $template,
             ['subscriptionId' => $subscriptionId, 'accountId' => $accountId]
         );
 
-        return json_decode($jsonString, true);
+        return json_decode((string) $jsonString, true);
     }
 
-    protected function payloadOfOrderCompleted($accountId)
+    protected function payloadOfOrderCompleted($accountId): mixed
     {
-        $template = file_get_contents(__DIR__ . '/Payloads/order_completed.json');
+        $template = file_get_contents(__DIR__.'/Payloads/order_completed.json');
         $jsonString = $this->renderTemplate($template, ['accountId' => $accountId]);
 
-        return json_decode($jsonString, true);
+        return json_decode((string) $jsonString, true);
     }
 
-    protected function renderTemplate($template, $data)
+    protected function renderTemplate($template, $data): string|array|null
     {
         $dataKeys = array_keys($data);
         $replacements = array_values($data);
@@ -188,9 +185,9 @@ class ListenersTest extends TestCase
         $patterns = [];
 
         foreach ($dataKeys as $dataKey) {
-            $patterns[] = '/{' . $dataKey . '}/';
+            $patterns[] = '/{'.$dataKey.'}/';
         }
 
-        return preg_replace($patterns, $replacements, $template);
+        return preg_replace($patterns, $replacements, (string) $template);
     }
 }

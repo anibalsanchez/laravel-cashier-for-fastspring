@@ -1,7 +1,5 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Events;
+namespace Photalika\CashierForFastspring\Events;
 
-class ReturnCreated extends Base
-{
-}
+class ReturnCreated extends Base {}

@@ -1,15 +1,6 @@
 <?php
-/**
- * This file implements Subscription Period.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring;
+namespace Photalika\CashierForFastspring;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,15 +18,16 @@ class SubscriptionPeriod extends Model
      */
     protected $guarded = [];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'start_date', 'end_date',
-        'created_at', 'updated_at',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'start_date' => 'date',
+            'end_date' => 'date',
+
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 
     /**
      * Get the user that owns the subscription.
@@ -44,6 +36,8 @@ class SubscriptionPeriod extends Model
      */
     public function subscription()
     {
-        return $this->belongsTo('TwentyTwoDigital\CashierFastspring\Subscription');
+        return $this->belongsTo(\Photalika\CashierForFastspring\Subscription::class);
     }
+
+    public function getCarbonStartDate(): void {}
 }

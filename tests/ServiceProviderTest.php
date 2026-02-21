@@ -1,13 +1,13 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests;
 
 use Orchestra\Testbench\TestCase;
-use TwentyTwoDigital\CashierFastspring\CashierServiceProvider;
+use Photalika\CashierForFastspring\CashierServiceProvider;
 
 class ServiceProviderTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -15,21 +15,21 @@ class ServiceProviderTest extends TestCase
     /**
      * Tests.
      */
-    public function testServiceProviderCanBeConstructed()
+    public function test_service_provider_can_be_constructed(): void
     {
         $this->assertInstanceOf(CashierServiceProvider::class, new CashierServiceProvider(app()));
     }
 
-    public function testRegisterMethod()
+    public function test_register_method(): void
     {
-        $serviceProvider = new CashierServiceProvider(app());
-        $this->assertNull($serviceProvider->register());
+        $cashierServiceProvider = new CashierServiceProvider(app());
+        $this->assertNull($cashierServiceProvider->register());
     }
 
     // TODO: should test if it moves migration files or not
-    public function testBootMethod()
+    public function test_boot_method(): void
     {
-        $serviceProvider = new CashierServiceProvider(app());
-        $this->assertNull($serviceProvider->boot());
+        $cashierServiceProvider = new CashierServiceProvider(app());
+        $this->assertNull($cashierServiceProvider->boot());
     }
 }

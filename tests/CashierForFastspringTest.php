@@ -1,37 +1,33 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests;
 
 use Exception;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Orchestra\Testbench\TestCase;
-use TwentyTwoDigital\CashierFastspring\Billable;
-use TwentyTwoDigital\CashierFastspring\Exceptions\NotImplementedException;
-use TwentyTwoDigital\CashierFastspring\SubscriptionBuilder;
-use TwentyTwoDigital\CashierFastspring\Tests\Traits\Database;
-use TwentyTwoDigital\CashierFastspring\Tests\Traits\Guzzle;
-use TwentyTwoDigital\CashierFastspring\Tests\Traits\Model;
+use Photalika\CashierForFastspring\Exceptions\NotImplementedException;
+use Photalika\CashierForFastspring\SubscriptionBuilder;
+use Photalika\CashierForFastspring\Tests\Traits\Database;
+use Photalika\CashierForFastspring\Tests\Traits\Guzzle;
+use Photalika\CashierForFastspring\Tests\Traits\Model;
 
 /**
  * This class tests general process of cashier over Billable trait.
  */
-class CashierFastspringTest extends TestCase
+class CashierForFastspringTest extends TestCase
 {
     use Database;
-    use Model;
     use Guzzle;
+    use Model;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        if (file_exists(__DIR__ . '/.env')) {
-            $dotenv = \Dotenv\Dotenv::create(__DIR__);
-            $dotenv->load();
-        }
+        configureEnv();
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -47,12 +43,12 @@ class CashierFastspringTest extends TestCase
     /**
      * Tests.
      */
-    public function testSubscriptionBuilderCanBeConstructed()
+    public function test_subscription_builder_can_be_constructed(): void
     {
         $this->assertInstanceOf(SubscriptionBuilder::class, new SubscriptionBuilder('owner', 'name', 'plan'));
     }
 
-    public function testCreateSession()
+    public function test_create_session(): void
     {
         $this->setMockResponsesAndHistory([
             new Response(200, [], json_encode(['id' => 'session_id'])),
@@ -64,10 +60,10 @@ class CashierFastspringTest extends TestCase
 
         $session = $user->newSubscription('main', 'starter-plan')->create();
 
-        $this->assertObjectHasAttribute('id', $session);
+        $this->assertObjectHasProperty('id', $session);
     }
 
-    public function testCreateSessionWithCoupon()
+    public function test_create_session_with_coupon(): void
     {
         $transactions = [];
         $history = Middleware::history($transactions);
@@ -87,10 +83,10 @@ class CashierFastspringTest extends TestCase
         $this->assertEquals(1, $requestParameters['items'][0]['quantity']);
         $this->assertEquals('main', $requestParameters['tags']['name']);
         $this->assertEquals('free-php-coupon', $requestParameters['coupon']);
-        $this->assertObjectHasAttribute('id', $session);
+        $this->assertObjectHasProperty('id', $session);
     }
 
-    public function testCreateAsFastspringCustomer()
+    public function test_create_as_fastspring_customer(): void
     {
         $this->setMockResponsesAndHistory([
             new Response(200, [], json_encode(['account' => 'fastspring_id'])),
@@ -100,11 +96,11 @@ class CashierFastspringTest extends TestCase
 
         $account = $user->createAsFastspringCustomer();
 
-        $this->assertObjectHasAttribute('account', $account);
+        $this->assertObjectHasProperty('account', $account);
         $this->assertEquals($user->fastspring_id, 'fastspring_id');
     }
 
-    public function testCreateSessionWithoutFastspringId()
+    public function test_create_session_without_fastspring_id(): void
     {
         $this->setMockResponsesAndHistory([
             new Response(200, [], json_encode(['account' => 'fastspring_id'])),
@@ -115,11 +111,11 @@ class CashierFastspringTest extends TestCase
 
         $session = $user->newSubscription('main', 'starter-plan')->create();
 
-        $this->assertObjectHasAttribute('hello', $session);
+        $this->assertObjectHasProperty('hello', $session);
         $this->assertEquals($user->fastspring_id, 'fastspring_id');
     }
 
-    public function testCreateSessionWithLostFastspringId()
+    public function test_create_session_with_lost_fastspring_id(): void
     {
         $this->setMockResponsesAndHistory([
             new Response(407, [], json_encode([
@@ -138,11 +134,11 @@ class CashierFastspringTest extends TestCase
 
         $session = $user->newSubscription('main', 'starter-plan')->create();
 
-        $this->assertObjectHasAttribute('hello', $session);
+        $this->assertObjectHasProperty('hello', $session);
         $this->assertEquals($user->fastspring_id, 'fastspring_id');
     }
 
-    public function testUpdateAsFastspringCustomer()
+    public function test_update_as_fastspring_customer(): void
     {
         $this->setMockResponsesAndHistory([
             new Response(200, [], json_encode([['account' => 'fastspring_id']])),
@@ -154,11 +150,11 @@ class CashierFastspringTest extends TestCase
 
         $account = $user->updateAsFastspringCustomer();
 
-        $this->assertInternalType('array', $account);
-        $this->assertObjectHasAttribute('account', $account[0]);
+        $this->assertIsArray($account);
+        $this->assertObjectHasProperty('account', $account[0]);
     }
 
-    public function testUpdateAsFastspringCustomerWithoutFastspringId()
+    public function test_update_as_fastspring_customer_without_fastspring_id(): void
     {
         $this->expectException(Exception::class);
 
@@ -170,10 +166,10 @@ class CashierFastspringTest extends TestCase
             'fastspring_id' => null,
         ]);
 
-        $account = $user->updateAsFastspringCustomer();
+        $user->updateAsFastspringCustomer();
     }
 
-    public function testAsFastspringCustomer()
+    public function test_as_fastspring_customer(): void
     {
         $this->setMockResponsesAndHistory([
             new Response(200, [], json_encode([['account' => 'fastspring_id']])),
@@ -185,11 +181,11 @@ class CashierFastspringTest extends TestCase
 
         $account = $user->asFastspringCustomer();
 
-        $this->assertInternalType('array', $account);
-        $this->assertObjectHasAttribute('account', $account[0]);
+        $this->assertIsArray($account);
+        $this->assertObjectHasProperty('account', $account[0]);
     }
 
-    public function testGetAccountManagementURI()
+    public function test_get_account_management_uri(): void
     {
         $this->setMockResponsesAndHistory([
             new Response(200, [], json_encode(['accounts' => [['url' => 'url']]])),
@@ -204,7 +200,7 @@ class CashierFastspringTest extends TestCase
         $this->assertEquals($url, 'url');
     }
 
-    public function testAsFastspringCustomerWithoutFastspringId()
+    public function test_as_fastspring_customer_without_fastspring_id(): void
     {
         $this->expectException(Exception::class);
 
@@ -216,11 +212,11 @@ class CashierFastspringTest extends TestCase
             'fastspring_id' => null,
         ]);
 
-        $account = $user->asFastspringCustomer();
+        $user->asFastspringCustomer();
     }
 
     // improve
-    public function testSubscription()
+    public function test_subscription(): void
     {
         $user = $this->createUser([
             'fastspring_id' => 'fastspring_id',
@@ -245,7 +241,7 @@ class CashierFastspringTest extends TestCase
         $this->assertTrue($isSubscribed);
         $this->assertTrue($isSubscribedToPlan);
         $this->assertTrue($isSubscribedWithPlanParameter);
-        $this->assertInternalType('object', $subscription);
+        $this->assertIsObject($subscription);
         $this->assertEquals($subscription->plan, 'starter-plan');
         $this->assertEquals($subscriptions->count(), 1);
         $this->assertFalse($onTrial);
@@ -255,7 +251,7 @@ class CashierFastspringTest extends TestCase
         $this->assertFalse($isSubscribedToPlanWithoutPlans);
     }
 
-    public function testHasFastspringId()
+    public function test_has_fastspring_id(): void
     {
         $user = $this->createUser();
 
@@ -269,26 +265,26 @@ class CashierFastspringTest extends TestCase
         $this->assertTrue($user->hasFastspringId());
     }
 
-    public function testGetFirstAndLastName()
+    public function test_get_first_and_last_name(): void
     {
         $user = $this->createUser([
             'email' => 'first.middle@last.com',
-            'name'  => 'First Middle Last',
+            'name' => 'First Middle Last',
         ]);
 
         $user2 = $this->createUser([
             'email' => 'first@last.com',
-            'name'  => 'First Last',
+            'name' => 'First Last',
         ]);
 
         $user3 = $this->createUser([
             'email' => 'first@last.com',
-            'name'  => 'First',
+            'name' => 'First',
         ]);
 
         $user4 = $this->createUser([
             'email' => 'first.space.middle.space@last.com',
-            'name'  => 'First  Middle  Last',
+            'name' => 'First  Middle  Last',
         ]);
 
         $this->assertEquals($user->extractFirstName(), 'First Middle');
@@ -302,7 +298,7 @@ class CashierFastspringTest extends TestCase
         $this->assertEquals($user4->extractLastName(), 'Last');
     }
 
-    public function testCharge()
+    public function test_charge(): void
     {
         $this->expectException(NotImplementedException::class);
 
@@ -313,7 +309,7 @@ class CashierFastspringTest extends TestCase
         $user->charge(1);
     }
 
-    public function testRefund()
+    public function test_refund(): void
     {
         $this->expectException(NotImplementedException::class);
 

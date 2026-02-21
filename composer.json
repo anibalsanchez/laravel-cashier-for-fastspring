@@ -1,62 +1,67 @@
 {
-    "name": "22digital/laravel-cashier-fastspring",
-    "description": "Cashier Fastspring is a cashier-like laravel package which provides an interface to Fastspring subscription and payment services.",
-    "keywords": ["laravel", "fastspring", "billing", "cashier"],
-    "license": "MIT",
-    "support": {
-        "issues": "https://github.com/22digital/laravel-cashier-fastspring/issues",
-        "source": "https://github.com/22digital/laravel-cashier-fastspring"
-    },
-    "authors": [
-        {
-            "name": "Bilal Gultekin",
-            "email": "bilal@gultekin.me"
-        },
-        {
-            "name": "Justin Hartman",
-            "email": "justin@hartman.me"
-        }
+  "name": "photalika/laravel-cashier-fastspring",
+  "description": "Cashier For Fastspring is a cashier-like laravel package which provides an interface to Fastspring subscription and payment services.",
+  "keywords": [
+    "laravel",
+    "fastspring",
+    "billing",
+    "cashier"
+  ],
+  "license": "MIT",
+  "support": {
+    "issues": "https://anibalsanchez/laravel-cashier-fastspring-v12/issues",
+    "source": "https://anibalsanchez/laravel-cashier-fastspring-v12"
+  },
+  "authors": [
+    {
+      "name": "Anibal Sanchez",
+      "email": "anibal.sanchez@photalika.com"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "illuminate/database": "^12.0",
+    "illuminate/support": "^12.0",
+    "nesbot/carbon": "^3.0",
+    "symfony/http-kernel": "^7.0",
+    "guzzlehttp/guzzle": "^7.2"
+  },
+  "require-dev": {
+    "illuminate/http": "^12.0",
+    "illuminate/routing": "^12.0",
+    "mockery/mockery": "^1.0",
+    "phpunit/phpunit": "^12.0",
+    "vlucas/phpdotenv": "^5.6",
+    "orchestra/testbench": "^10.0",
+    "laravel/pint": "^1.24"
+  },
+  "autoload": {
+    "psr-4": {
+      "Photalika\\CashierForFastspring\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "files": [
+      "tests/helpers.php"
     ],
-    "require": {
-        "php": "^8.0",
-        "illuminate/database": "^9.21|^10.0|^11.0|^12.0",
-        "illuminate/support": "^9.21|^10.0|^11.0|^12.0",
-        "nesbot/carbon": "^2.0|^3.0",
-        "symfony/http-kernel": "^6.0|^7.0",
-        "guzzlehttp/guzzle": "^7.2"
-    },
-    "require-dev": {
-        "illuminate/http": "^9.21|^10.0|^11.0|^12.0",
-        "illuminate/routing": "^9.21|^10.0|^11.0|^12.0",
-        "mockery/mockery": "~1.0",
-        "phpunit/phpunit": "^9.0",
-        "vlucas/phpdotenv": "^3.3",
-        "orchestra/testbench": "^7.0|^8.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "TwentyTwoDigital\\CashierFastspring\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "TwentyTwoDigital\\CashierFastspring\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "TwentyTwoDigital\\CashierFastspring\\CashierServiceProvider"
-            ]
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html=coverage"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "psr-4": {
+      "Photalika\\CashierForFastspring\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Photalika\\CashierForFastspring\\CashierServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html=coverage"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

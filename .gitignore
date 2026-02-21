@@ -11,3 +11,6 @@ tests.md
 patch-changes.md
 /docs/images/**
 !/docs/images/hero-small.png
+.phpunit.result.cache
+.vscode
+tests/.env

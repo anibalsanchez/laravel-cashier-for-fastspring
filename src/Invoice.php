@@ -1,15 +1,6 @@
 <?php
-/**
- * This file implements Invoice.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring;
+namespace Photalika\CashierForFastspring;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,17 +18,16 @@ class Invoice extends Model
      */
     protected $guarded = [];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'subscription_period_start_date',
-        'subscription_period_end_date',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'subscription_period_start_date' => 'date',
+            'subscription_period_end_date' => 'date',
+
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 
     /**
      * Get the user that owns the invoice.
@@ -58,8 +48,8 @@ class Invoice extends Model
     {
         $model = getenv('FASTSPRING_MODEL') ?: config('services.fastspring.model', 'App\\User');
 
-        $model = new $model();
+        $model = new $model;
 
-        return $this->belongsTo(get_class($model), $model->getForeignKey());
+        return $this->belongsTo($model::class, $model->getForeignKey());
     }
 }

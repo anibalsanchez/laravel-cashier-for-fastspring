@@ -1,45 +1,15 @@
 <?php
-/**
- * This file implements Subscription Builder.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring;
+namespace Photalika\CashierForFastspring;
 
 use GuzzleHttp\Exception\ClientException;
-use TwentyTwoDigital\CashierFastspring\Fastspring\Fastspring;
+use Photalika\CashierForFastspring\Fastspring\Fastspring;
 
 /**
  * Front-end to create subscription objects step by step.
  */
 class SubscriptionBuilder
 {
-    /**
-     * The model that is subscribing.
-     *
-     * @var \Illuminate\Database\Eloquent\Model
-     */
-    protected $owner;
-
-    /**
-     * The name of the subscription.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * The name of the plan being subscribed to.
-     *
-     * @var string
-     */
-    protected $plan;
-
     /**
      * The quantity of the subscription.
      *
@@ -57,27 +27,33 @@ class SubscriptionBuilder
     /**
      * Create a new subscription builder instance.
      *
-     * @param mixed  $owner Owner details
-     * @param string $name  Plan name
-     * @param string $plan  Plan
-     *
+     * @param  mixed  $owner  Owner details
+     * @param  string  $name  Plan name
+     * @param  string  $plan  Plan
      * @return void
      */
-    public function __construct($owner, $name, $plan)
-    {
-        $this->name = $name;
-        $this->plan = $plan;
-        $this->owner = $owner;
-    }
+    public function __construct(
+        /**
+         * The model that is subscribing.
+         */
+        protected $owner,
+        /**
+         * The name of the subscription.
+         */
+        protected $name,
+        /**
+         * The name of the plan being subscribed to.
+         */
+        protected $plan
+    ) {}
 
     /**
      * Specify the quantity of the subscription.
      *
-     * @param int $quantity Number of items
-     *
+     * @param  int  $quantity  Number of items
      * @return $this
      */
-    public function quantity($quantity)
+    public function quantity($quantity): static
     {
         $this->quantity = $quantity;
 
@@ -87,11 +63,10 @@ class SubscriptionBuilder
     /**
      * The coupon to apply to a new subscription.
      *
-     * @param string $coupon Coupon string to use
-     *
+     * @param  string  $coupon  Coupon string to use
      * @return $this
      */
-    public function withCoupon($coupon)
+    public function withCoupon($coupon): static
     {
         $this->coupon = $coupon;
 
@@ -101,7 +76,7 @@ class SubscriptionBuilder
     /**
      * Create a new Fastspring session and return it as object.
      *
-     * @return \TwentyTwoDigital\CashierFastspring\Fastspring\Fastspring
+     * @return \Photalika\CashierForFastspring\Fastspring\Fastspring
      */
     public function create()
     {
@@ -118,13 +93,14 @@ class SubscriptionBuilder
      * fastspring-side error message. It will also returns account link but
      * messages are easily changable so we can't rely on that.
      *
-     * @throws Exception
      *
      * @return int|string
+     *
+     * @throws Exception
      */
     protected function getFastspringIdOfCustomer()
     {
-        if (!$this->owner->fastspring_id) {
+        if (! $this->owner->fastspring_id) {
             try {
                 $customer = $this->owner->createAsFastspringCustomer();
             } catch (ClientException $e) {
@@ -154,17 +130,15 @@ class SubscriptionBuilder
     /**
      * Build the payload for session creation.
      *
-     * @param int $fastspringId The fastspring identifier
-     *
-     * @return array
+     * @param  int  $fastspringId  The fastspring identifier
      */
-    protected function buildPayload($fastspringId)
+    protected function buildPayload($fastspringId): array
     {
         return array_filter([
             'account' => $fastspringId,
-            'items'   => [
+            'items' => [
                 [
-                    'product'  => $this->plan,
+                    'product' => $this->plan,
                     'quantity' => $this->quantity,
                 ],
             ],

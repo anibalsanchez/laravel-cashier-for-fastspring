@@ -1,36 +1,26 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Tests\Fixtures\WebhookControllerTestStub;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Tests\Fixtures\WebhookControllerTestStub;
 
 class WebhookControllerTest extends TestCase
 {
-    /**
-     * Class constructor.
-     *
-     * @return void
-     */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        if (file_exists(__DIR__ . '/.env')) {
-            $dotenv = \Dotenv\Dotenv::create(__DIR__);
-            $dotenv->load();
-        }
+        configureEnv();
     }
 
     /**
      * Test HMAC.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function testHmac()
+    public function test_hmac(): void
     {
         $hmacSecret = 'dontlookiamsecret';
         Config::set('services.fastspring.hmac_secret', $hmacSecret);
@@ -38,12 +28,12 @@ class WebhookControllerTest extends TestCase
         $webhookRequestPayload = [
             'events' => [
                 [
-                    'id'        => 'id-1',
-                    'live'      => true,
+                    'id' => 'id-1',
+                    'live' => true,
                     'processed' => false,
-                    'type'      => 'account.created',
-                    'created'   => 1426560444800,
-                    'data'      => [],
+                    'type' => 'account.created',
+                    'created' => 1426560444800,
+                    'data' => [],
                 ],
             ],
         ];
@@ -54,8 +44,8 @@ class WebhookControllerTest extends TestCase
             base64_encode(hash_hmac('sha256', $request->getContent(), $hmacSecret, true))
         );
 
-        $controller = new WebhookControllerTestStub();
-        $response = $controller->handleWebhook($request);
+        $webhookControllerTestStub = new WebhookControllerTestStub;
+        $response = $webhookControllerTestStub->handleWebhook($request);
 
         $this->assertEquals($response->getStatusCode(), 202);
     }
@@ -64,9 +54,8 @@ class WebhookControllerTest extends TestCase
      * Test HMAC failed.
      *
      * @throws \Exception $exception
-     * @return \Illuminate\Http\Response
      */
-    public function testHmacFailed()
+    public function test_hmac_failed(): void
     {
         Config::set('services.fastspring.hmac_secret', 'dontlookiamsecret');
         $this->expectException(\Exception::class);
@@ -74,47 +63,47 @@ class WebhookControllerTest extends TestCase
         $webhookRequestPayload = [
             'events' => [
                 [
-                    'id'        => 'id-1',
-                    'live'      => true,
+                    'id' => 'id-1',
+                    'live' => true,
                     'processed' => false,
-                    'type'      => 'account.created',
-                    'created'   => 1426560444800,
-                    'data'      => [],
+                    'type' => 'account.created',
+                    'created' => 1426560444800,
+                    'data' => [],
                 ],
             ],
         ];
 
         $request = Request::create('/', 'POST', [], [], [], [], json_encode($webhookRequestPayload));
-        $controller = new WebhookControllerTestStub();
-        $response = $controller->handleWebhook($request);
+        $webhookControllerTestStub = new WebhookControllerTestStub;
+        $webhookControllerTestStub->handleWebhook($request);
     }
 
-    public function testMultipleWebhookEvents()
+    public function test_multiple_webhook_events(): void
     {
         $webhookRequestPayload = [
             'events' => [
                 [
-                    'id'        => 'id-1',
-                    'live'      => true,
+                    'id' => 'id-1',
+                    'live' => true,
                     'processed' => false,
-                    'type'      => 'account.created',
-                    'created'   => 1426560444800,
-                    'data'      => [],
+                    'type' => 'account.created',
+                    'created' => 1426560444800,
+                    'data' => [],
                 ],
                 [
-                    'id'        => 'id-2',
-                    'live'      => true,
+                    'id' => 'id-2',
+                    'live' => true,
                     'processed' => false,
-                    'type'      => 'subscription.activated',
-                    'created'   => 1426560444800,
-                    'data'      => [],
+                    'type' => 'subscription.activated',
+                    'created' => 1426560444800,
+                    'data' => [],
                 ],
             ],
         ];
 
         $request = Request::create('/', 'POST', [], [], [], [], json_encode($webhookRequestPayload));
-        $controller = new WebhookControllerTestStub();
-        $response = $controller->handleWebhook($request);
+        $webhookControllerTestStub = new WebhookControllerTestStub;
+        $response = $webhookControllerTestStub->handleWebhook($request);
 
         $content = $response->getContent();
         $statusCode = $response->getStatusCode();
@@ -125,28 +114,26 @@ class WebhookControllerTest extends TestCase
 
     /**
      * Test multiple webhook events by failing one.
-     *
-     * @return void
      */
-    public function testMultipleWebhookEventsByFailingOne()
+    public function test_multiple_webhook_events_by_failing_one(): void
     {
         $webhookRequestPayload = [
             'events' => [
                 [
-                    'id'        => 'id-1',
-                    'live'      => true,
+                    'id' => 'id-1',
+                    'live' => true,
                     'processed' => false,
-                    'type'      => 'account.created',
-                    'created'   => 1426560444800,
-                    'data'      => [],
+                    'type' => 'account.created',
+                    'created' => 1426560444800,
+                    'data' => [],
                 ],
                 [
-                    'id'        => 'id-2',
-                    'live'      => true,
+                    'id' => 'id-2',
+                    'live' => true,
                     'processed' => false,
-                    'type'      => 'subscription.notexistevent',
-                    'created'   => 1426560444800,
-                    'data'      => [],
+                    'type' => 'subscription.notexistevent',
+                    'created' => 1426560444800,
+                    'data' => [],
                 ],
             ],
         ];
@@ -156,8 +143,8 @@ class WebhookControllerTest extends TestCase
         // alson in the content of the response
 
         $request = Request::create('/', 'POST', [], [], [], [], json_encode($webhookRequestPayload));
-        $controller = new WebhookControllerTestStub();
-        $response = $controller->handleWebhook($request);
+        $webhookControllerTestStub = new WebhookControllerTestStub;
+        $response = $webhookControllerTestStub->handleWebhook($request);
 
         $content = $response->getContent();
         $statusCode = $response->getStatusCode();
@@ -168,10 +155,8 @@ class WebhookControllerTest extends TestCase
 
     /**
      * Webhook test events.
-     *
-     * @return \TwentyTwoDigital\CashierFastspring\Tests\WebhookControllerTest\sendRequestAndListenEvents
      */
-    public function testWebhooksEvents()
+    public function test_webhooks_events(): void
     {
         $webhookEvents = [
             'account.created',
@@ -198,22 +183,22 @@ class WebhookControllerTest extends TestCase
 
         foreach ($webhookEvents as $key => $webhookEvent) {
             $mockEvent = [
-                'id'        => 'id-' . $key,
-                'live'      => true,
+                'id' => 'id-'.$key,
+                'live' => true,
                 'processed' => false,
-                'type'      => $webhookEvent,
-                'created'   => 1426560444800,
-                'data'      => [],
+                'type' => $webhookEvent,
+                'created' => 1426560444800,
+                'data' => [],
             ];
 
             // prepare category event class names like OrderAny
             $explodedType = explode('.', $mockEvent['type']);
             $category = array_shift($explodedType);
-            $categoryEvent = 'TwentyTwoDigital\CashierFastspring\Events\\' . Str::studly($category) . 'Any';
+            $categoryEvent = 'Photalika\CashierForFastspring\Events\\'.Str::studly($category).'Any';
 
             // prepare category event class names like activity
             $activity = str_replace('.', ' ', $mockEvent['type']);
-            $activityEvent = 'TwentyTwoDigital\CashierFastspring\Events\\' . Str::studly($activity);
+            $activityEvent = 'Photalika\CashierForFastspring\Events\\'.Str::studly($activity);
 
             $listenEvents = [
                 Events\Any::class,
@@ -228,9 +213,8 @@ class WebhookControllerTest extends TestCase
     /**
      * Sends request and listen for events.
      *
-     * @param array $mockEvent    The mock event array
-     * @param array $listenEvents The listen events
-     *
+     * @param  array  $mockEvent  The mock event array
+     * @param  array  $listenEvents  The listen events
      * @return \Illuminate\Support\Facades\Event
      */
     protected function sendRequestAndListenEvents($mockEvent, $listenEvents)
@@ -244,16 +228,14 @@ class WebhookControllerTest extends TestCase
         ];
 
         $request = Request::create('/', 'POST', [], [], [], [], json_encode($webhookRequestPayload));
-        $controller = new WebhookControllerTestStub();
-        $controller->handleWebhook($request);
+        $webhookControllerTestStub = new WebhookControllerTestStub;
+        $webhookControllerTestStub->handleWebhook($request);
 
         foreach ($listenEvents as $listenEvent) {
             // Assert
             Event::assertDispatched(
                 $listenEvent,
-                function ($event) use ($mockEvent) {
-                    return (int) $event->id === (int) $mockEvent['id'];
-                }
+                fn ($event): bool => (int) $event->id === (int) $mockEvent['id']
             );
         }
     }

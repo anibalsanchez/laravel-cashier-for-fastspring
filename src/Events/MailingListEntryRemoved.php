@@ -1,7 +1,5 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Events;
+namespace Photalika\CashierForFastspring\Events;
 
-class MailingListEntryRemoved extends Base
-{
-}
+class MailingListEntryRemoved extends Base {}

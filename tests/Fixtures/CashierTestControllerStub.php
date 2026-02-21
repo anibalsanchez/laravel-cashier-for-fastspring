@@ -1,9 +1,7 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests\Fixtures;
+namespace Photalika\CashierForFastspring\Tests\Fixtures;
 
-use TwentyTwoDigital\CashierFastspring\Http\Controllers\WebhookController;
+use Photalika\CashierForFastspring\Http\Controllers\WebhookController;
 
-class CashierTestControllerStub extends WebhookController
-{
-}
+class CashierTestControllerStub extends WebhookController {}

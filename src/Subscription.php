@@ -1,21 +1,12 @@
 <?php
-/**
- * This file implements a Subscription.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring;
+namespace Photalika\CashierForFastspring;
 
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use LogicException;
-use TwentyTwoDigital\CashierFastspring\Fastspring\Fastspring;
+use Photalika\CashierForFastspring\Fastspring\Fastspring;
 
 /**
  * This class describes a subscription.
@@ -31,21 +22,21 @@ class Subscription extends Model
      */
     protected $guarded = [];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'created_at', 'updated_at', 'swap_at',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'swap_at' => 'datetime',
+        ];
+    }
 
     /**
      * The date on which the billing cycle should be anchored.
      *
      * @var string|null
      */
-    protected $billingCycleAnchor = null;
+    protected $billingCycleAnchor;
 
     /**
      * Get the user that owns the subscription.
@@ -60,7 +51,7 @@ class Subscription extends Model
      */
     public function periods()
     {
-        return $this->hasMany('TwentyTwoDigital\CashierFastspring\SubscriptionPeriod');
+        return $this->hasMany(\Photalika\CashierForFastspring\SubscriptionPeriod::class);
     }
 
     /**
@@ -68,10 +59,10 @@ class Subscription extends Model
      */
     public function activePeriod()
     {
-        return $this->hasOne('TwentyTwoDigital\CashierFastspring\SubscriptionPeriod')
-                    ->where('start_date', '<=', Carbon::now()->format('Y-m-d H:i:s'))
-                    ->where('end_date', '>=', Carbon::now()->format('Y-m-d H:i:s'))
-                    ->where('type', $this->type());
+        return $this->hasOne(\Photalika\CashierForFastspring\SubscriptionPeriod::class)
+            ->where('start_date', '<=', Carbon::now()->format('Y-m-d H:i:s'))
+            ->where('end_date', '>=', Carbon::now()->format('Y-m-d H:i:s'))
+            ->where('type', $this->type());
     }
 
     /**
@@ -79,7 +70,7 @@ class Subscription extends Model
      *
      * Note: This is not eloquent relation, it returns SubscriptionPeriod model directly.
      *
-     * @return \TwentyTwoDigital\CashierFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
      */
     public function activePeriodOrCreate()
     {
@@ -93,7 +84,7 @@ class Subscription extends Model
     /**
      * Get active fastspring period or retrieve the active period from fastspring and create.
      *
-     * @return \TwentyTwoDigital\CashierFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
      */
     public function activeFastspringPeriodOrCreate()
     {
@@ -119,7 +110,7 @@ class Subscription extends Model
     /**
      * Get active local period or create.
      *
-     * @return \TwentyTwoDigital\CashierFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
      */
     public function activeLocalPeriodOrCreate()
     {
@@ -145,7 +136,7 @@ class Subscription extends Model
     /**
      * Create period with the information from fastspring.
      *
-     * @return \TwentyTwoDigital\CashierFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
      */
     protected function createPeriodFromFastspring()
     {
@@ -159,8 +150,8 @@ class Subscription extends Model
             'type' => 'fastspring',
 
             // dates
-            'start_date'      => $response[0]->beginPeriodDate,
-            'end_date'        => $response[0]->endPeriodDate,
+            'start_date' => $response[0]->beginPeriodDate,
+            'end_date' => $response[0]->endPeriodDate,
             'subscription_id' => $this->id,
         ];
 
@@ -174,9 +165,10 @@ class Subscription extends Model
      * Simply finds latest and add its dates $interval_length * $interval_unit
      * If there is no subscription period, it creates a subscription period started today
      *
-     * @throws \Exception
      *
-     * @return \TwentyTwoDigital\CashierFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
+     *
+     * @throws \Exception
      */
     protected function createPeriodLocally()
     {
@@ -209,7 +201,7 @@ class Subscription extends Model
                     $end_date = $start_date->copy()->addWeeks($this->interval_length)->subDay();
                     break;
 
-                // probably same thing with the year
+                    // probably same thing with the year
                 case 'year':
                     $start_date = $lastPeriod
                         ? $lastPeriod->start_date->addYearsNoOverflow($this->interval_length)
@@ -219,18 +211,18 @@ class Subscription extends Model
                     break;
 
                 default:
-                    throw new Exception('Unexcepted interval unit: ' . $subscription->interval_unit);
+                    throw new Exception('Unexcepted interval unit: '.$subscription->interval_unit);
             }
 
             $subscriptionPeriodData = [
-                'type'            => 'local',
-                'start_date'      => $start_date->format('Y-m-d'),
-                'end_date'        => $end_date->format('Y-m-d'),
+                'type' => 'local',
+                'start_date' => $start_date->format('Y-m-d'),
+                'end_date' => $end_date->format('Y-m-d'),
                 'subscription_id' => $this->id,
             ];
 
             $lastPeriod = SubscriptionPeriod::firstOrCreate($subscriptionPeriodData);
-        } while (!($today->greaterThanOrEqualTo($lastPeriod->start_date)
+        } while (! ($today->greaterThanOrEqualTo($lastPeriod->start_date)
             && $today->lessThanOrEqualTo($lastPeriod->end_date)
         ));
 
@@ -246,59 +238,49 @@ class Subscription extends Model
     {
         $model = getenv('FASTSPRING_MODEL') ?: config('services.fastspring.model', 'App\\User');
 
-        $model = new $model();
+        $model = new $model;
 
-        return $this->belongsTo(get_class($model), $model->getForeignKey());
+        return $this->belongsTo($model::class, $model->getForeignKey());
     }
 
     /**
      * Determine if the subscription is valid.
      * This includes following states on fastspring: active, trial, overdue, canceled.
      * The only state that you should stop serving is deactivated state.
-     *
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
-        return !$this->deactivated();
+        return ! $this->deactivated();
     }
 
     /**
      * Determine if the subscription is active.
-     *
-     * @return bool
      */
-    public function active()
+    public function active(): bool
     {
         return $this->state == 'active';
     }
 
     /**
      * Determine if the subscription is deactivated.
-     *
-     * @return bool
      */
-    public function deactivated()
+    public function deactivated(): bool
     {
         return $this->state == 'deactivated';
     }
 
     /**
      * Determine if the subscription is not paid and in wait.
-     *
-     * @return bool
      */
-    public function overdue()
+    public function overdue(): bool
     {
         return $this->state == 'overdue';
     }
 
     /**
      * Determine if the subscription is on trial.
-     *
-     * @return bool
      */
-    public function trial()
+    public function trial(): bool
     {
         return $this->state == 'trial';
     }
@@ -310,10 +292,8 @@ class Subscription extends Model
      * user ordered to cancel at end of the billing period.
      * Subscription is converted into deactivated on the start of next payment period,
      * after cancelling it.
-     *
-     * @return bool
      */
-    public function canceled()
+    public function canceled(): bool
     {
         return $this->state == 'canceled';
     }
@@ -321,80 +301,66 @@ class Subscription extends Model
     /**
      * ALIASES.
      */
-
     /**
      * Alias of canceled.
-     *
-     * @return bool
      */
-    public function cancelled()
+    public function cancelled(): bool
     {
         return $this->canceled();
     }
 
     /**
      * Determine if the subscription is within its trial period.
-     *
-     * @return bool
      */
-    public function onTrial()
+    public function onTrial(): bool
     {
         return $this->trial();
     }
 
     /**
      * Determine if the subscription is within its grace period after cancellation.
-     *
-     * @return bool
      */
-    public function onGracePeriod()
+    public function onGracePeriod(): bool
     {
         return $this->canceled();
     }
 
     /**
      * Determine type of the subscription: fastspring, local.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return $this->fastspring_id ? 'fastspring' : 'local';
     }
 
     /**
      * Determine if the subscription is local.
-     *
-     * @return bool
      */
-    public function isLocal()
+    public function isLocal(): bool
     {
-        return $this->type() == 'local';
+        return $this->type() === 'local';
     }
 
     /**
      * Determine if the subscription is fastspring.
-     *
-     * @return string
      */
-    public function isFastspring()
+    public function isFastspring(): bool
     {
-        return $this->type() == 'fastspring';
+        return $this->type() === 'fastspring';
     }
 
     /**
      * Swap the subscription to a new Fastspring plan.
      *
-     * @param string $plan     New plan
-     * @param bool   $prorate  Prorate
-     * @param int    $quantity Quantity of the product
-     * @param array  $coupons  Coupons wanted to be applied
+     * @param  string  $plan  New plan
+     * @param  bool  $prorate  Prorate
+     * @param  int  $quantity  Quantity of the product
+     * @param  array  $coupons  Coupons wanted to be applied
+     * @return object Response of fastspring
      *
      * @throws \Exception
-     *
-     * @return object Response of fastspring
      */
-    public function swap($plan, $prorate, $quantity = 1, $coupons = [])
+    public function swap($plan, $prorate, $quantity = 1, $coupons = []): static
     {
         $response = Fastspring::swapSubscription($this->fastspring_id, $plan, $prorate, $quantity, $coupons);
         $status = $response->subscriptions[0];
@@ -434,43 +400,45 @@ class Subscription extends Model
             return $this;
         }
 
-        throw new Exception('Swap operation failed. Response: ' . json_encode($response));
+        throw new Exception('Swap operation failed. Response: '.json_encode($response));
     }
 
     /**
      * Cancel the subscription at the end of the billing period.
      *
-     * @throws \Exception
      *
      * @return object Response of fastspring
+     *
+     * @throws \Exception
      */
-    public function cancel()
+    public function cancel(): static
     {
         $response = Fastspring::cancelSubscription($this->fastspring_id);
         $status = $response->subscriptions[0];
-        $activePeriod = $this->activePeriodOrCreate();
+        $subscriptionPeriod = $this->activePeriodOrCreate();
 
         if ($status->result == 'success') {
             $this->state = 'canceled';
-            $this->swap_at = $activePeriod
-                ? $activePeriod->end_date
+            $this->swap_at = $subscriptionPeriod
+                ? $subscriptionPeriod->end_date
                 : null;
             $this->save();
 
             return $this;
         }
 
-        throw new Exception('Cancel operation failed. Response: ' . json_encode($response));
+        throw new Exception('Cancel operation failed. Response: '.json_encode($response));
     }
 
     /**
      * Cancel the subscription immediately.
      *
-     * @throws \Exception
      *
      * @return object Response of fastspring
+     *
+     * @throws \Exception
      */
-    public function cancelNow()
+    public function cancelNow(): static
     {
         $response = Fastspring::cancelSubscription($this->fastspring_id, ['billing_period' => 0]);
         $status = $response->subscriptions[0];
@@ -484,20 +452,21 @@ class Subscription extends Model
             return $this;
         }
 
-        throw new Exception('CancelNow operation failed. Response: ' . json_encode($response));
+        throw new Exception('CancelNow operation failed. Response: '.json_encode($response));
     }
 
     /**
      * Resume the cancelled subscription.
      *
-     * @throws \LogicException
-     * @throws \Exception
      *
      * @return object Response of fastspring
+     *
+     * @throws \LogicException
+     * @throws \Exception
      */
-    public function resume()
+    public function resume(): static
     {
-        if (!$this->onGracePeriod()) {
+        if (! $this->onGracePeriod()) {
             throw new LogicException('Unable to resume subscription that is not within grace period or not canceled.');
         }
 
@@ -516,6 +485,6 @@ class Subscription extends Model
             return $this;
         }
 
-        throw new Exception('Resume operation failed. Response: ' . json_encode($response));
+        throw new Exception('Resume operation failed. Response: '.json_encode($response));
     }
 }

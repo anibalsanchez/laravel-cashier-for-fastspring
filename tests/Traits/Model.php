@@ -1,29 +1,29 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests\Traits;
+namespace Photalika\CashierForFastspring\Tests\Traits;
 
-use TwentyTwoDigital\CashierFastspring\Tests\Fixtures\User;
+use Photalika\CashierForFastspring\Tests\Fixtures\User;
 
 trait Model
 {
     public function createUser($parameters = [])
     {
         return User::create(array_merge([
-            'email' => 'bilal@gultekin.me',
-            'name'  => 'Bilal Gultekin',
+            'email' => 'test@test-email.me',
+            'name' => 'Nombre Apellido',
         ], $parameters));
     }
 
     public function createSubscription($user, $parameters = [])
     {
         return $user->subscriptions()->create(array_merge([
-            'name'            => 'main',
-            'fastspring_id'   => 'fastspring_id',
-            'plan'            => 'starter-plan',
-            'state'           => 'active',
-            'quantity'        => 1,
-            'currency'        => 'USD',
-            'interval_unit'   => 'month',
+            'name' => 'main',
+            'fastspring_id' => 'fastspring_id',
+            'plan' => 'starter-plan',
+            'state' => 'active',
+            'quantity' => 1,
+            'currency' => 'USD',
+            'interval_unit' => 'month',
             'interval_length' => 1,
         ], $parameters));
     }
@@ -31,9 +31,9 @@ trait Model
     public function createSubscriptionPeriod($subscription, $parameters = [])
     {
         return $subscription->periods()->create(array_merge([
-            'type'       => 'local',
+            'type' => 'local',
             'start_date' => '2010-01-01',
-            'end_date'   => '2010-02-01',
+            'end_date' => '2010-02-01',
         ], $parameters));
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests\Fixtures;
+namespace Photalika\CashierForFastspring\Tests\Fixtures;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use TwentyTwoDigital\CashierFastspring\Billable;
+use Photalika\CashierForFastspring\Billable;
 
 class User extends Eloquent
 {

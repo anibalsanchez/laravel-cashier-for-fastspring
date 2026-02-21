@@ -1,7 +1,5 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Events;
+namespace Photalika\CashierForFastspring\Events;
 
-class OrderApprovalPending extends Base
-{
-}
+class OrderApprovalPending extends Base {}

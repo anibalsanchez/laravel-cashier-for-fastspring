@@ -1,6 +1,6 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests\Traits;
+namespace Photalika\CashierForFastspring\Tests\Traits;
 
 use Illuminate\Support\Facades\Schema;
 
@@ -11,22 +11,24 @@ trait Database
         // Setup default database to use sqlite :memory:
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Schema::drop('users');
         Schema::drop('subscriptions');
         Schema::drop('invoices');
+
+        parent::tearDown();
     }
 
-    public function createUsersTable()
+    public function createUsersTable(): void
     {
-        Schema::create('users', function ($table) {
+        Schema::create('users', function ($table): void {
             $table->increments('id');
             $table->string('email');
             $table->string('name');
@@ -35,9 +37,9 @@ trait Database
         });
     }
 
-    public function createSubscriptionsTable()
+    public function createSubscriptionsTable(): void
     {
-        Schema::create('subscriptions', function ($table) {
+        Schema::create('subscriptions', function ($table): void {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->string('name');
@@ -56,9 +58,9 @@ trait Database
         });
     }
 
-    public function createSubscriptionPeriodsTable()
+    public function createSubscriptionPeriodsTable(): void
     {
-        Schema::create('subscription_periods', function ($table) {
+        Schema::create('subscription_periods', function ($table): void {
             $table->increments('id');
             $table->unsignedInteger('subscription_id');
             $table->string('type');
@@ -70,9 +72,9 @@ trait Database
         });
     }
 
-    public function createInvoicesTable()
+    public function createInvoicesTable(): void
     {
-        Schema::create('invoices', function ($table) {
+        Schema::create('invoices', function ($table): void {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->string('fastspring_id')->nullable();

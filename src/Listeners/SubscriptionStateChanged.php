@@ -1,18 +1,9 @@
 <?php
-/**
- * This file implements Subscription State Changed.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring\Listeners;
+namespace Photalika\CashierForFastspring\Listeners;
 
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Subscription;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Subscription;
 
 /**
  * This class is a listener for subscription state change events.
@@ -29,8 +20,6 @@ class SubscriptionStateChanged extends Base
 {
     /**
      * Create the event listener.
-     *
-     * @return null
      */
     public function __construct()
     {
@@ -39,14 +28,10 @@ class SubscriptionStateChanged extends Base
 
     /**
      * Handle the event.
-     *
-     * @param \TwentyTwoDigital\CashierFastspring\Events\Base $event
-     *
-     * @return void
      */
-    public function handle(Events\Base $event)
+    public function handle(Events\Base $base): void
     {
-        $data = $event->data;
+        $data = $base->data;
 
         // create
         $subscription = Subscription::where('fastspring_id', $data['id'])->firstOrFail();

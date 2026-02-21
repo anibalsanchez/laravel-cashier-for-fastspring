@@ -1,19 +1,10 @@
 <?php
-/**
- * This file implements Subscription Activated.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring\Listeners;
+namespace Photalika\CashierForFastspring\Listeners;
 
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Subscription;
-use TwentyTwoDigital\CashierFastspring\SubscriptionPeriod;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Subscription;
+use Photalika\CashierForFastspring\SubscriptionPeriod;
 
 /**
  * This class describes a subscription activated.
@@ -32,8 +23,6 @@ class SubscriptionActivated extends Base
 {
     /**
      * Create the event listener.
-     *
-     * @return null
      */
     public function __construct()
     {
@@ -42,24 +31,20 @@ class SubscriptionActivated extends Base
 
     /**
      * Handle the event.
-     *
-     * @param \TwentyTwoDigital\CashierFastspring\Events\SubscriptionActivated $event
-     *
-     * @return void
      */
-    public function handle(Events\SubscriptionActivated $event)
+    public function handle(Events\SubscriptionActivated $subscriptionActivated): void
     {
-        $data = $event->data;
+        $data = $subscriptionActivated->data;
 
         // first look for is there any subscription
-        $user = $this->getUserByFastspringId($data['account']['id']);
-        $subscriptionName = isset($data['tags']['name']) ? $data['tags']['name'] : 'default';
+        $billable = $this->getUserByFastspringId($data['account']['id']);
+        $subscriptionName = $data['tags']['name'] ?? 'default';
 
-        $subscription = $user->subscription();
+        $subscription = $billable->subscription();
 
-        if (!$subscription) {
-            $subscription = new Subscription();
-            $subscription->user_id = $user->id;
+        if (! $subscription) {
+            $subscription = new Subscription;
+            $subscription->user_id = $billable->id;
             $subscription->name = $subscriptionName;
         }
 
@@ -82,15 +67,19 @@ class SubscriptionActivated extends Base
 
         foreach ($instructions as $instruction) {
             // if end or start date is null don't insert
-            if (is_null($instruction['periodStartDateInSeconds']) || is_null($instruction['periodEndDateInSeconds'])) {
+            if (is_null($instruction['periodStartDateInSeconds'])) {
+                continue;
+            }
+
+            if (is_null($instruction['periodEndDateInSeconds'])) {
                 continue;
             }
 
             $subscriptionPeriod = SubscriptionPeriod::firstOrCreate([
                 'subscription_id' => $subscription->id,
-                'type'            => 'fastspring',
-                'start_date'      => date('Y-m-d', $instruction['periodStartDateInSeconds']),
-                'end_date'        => date('Y-m-d', $instruction['periodEndDateInSeconds']),
+                'type' => 'fastspring',
+                'start_date' => date('Y-m-d', $instruction['periodStartDateInSeconds']),
+                'end_date' => date('Y-m-d', $instruction['periodEndDateInSeconds']),
             ]);
         }
     }

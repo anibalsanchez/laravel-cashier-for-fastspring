@@ -1,14 +1,14 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests;
 
 use Orchestra\Testbench\TestCase;
-use TwentyTwoDigital\CashierFastspring\Exceptions\NotImplementedException;
+use Photalika\CashierForFastspring\Exceptions\NotImplementedException;
 
 class ExceptionsTest extends TestCase
 {
-    public function testNotImplementedExceptionCanBeConstructed()
+    public function test_not_implemented_exception_can_be_constructed(): void
     {
-        $this->assertInstanceOf(NotImplementedException::class, new NotImplementedException());
+        $this->assertInstanceOf(NotImplementedException::class, new NotImplementedException);
     }
 }

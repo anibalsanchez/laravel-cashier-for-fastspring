@@ -1,7 +1,5 @@
 <?php
 
-namespace TwentyTwoDigital\CashierFastspring\Events;
+namespace Photalika\CashierForFastspring\Events;
 
-class SubscriptionChargeFailed extends Base
-{
-}
+class SubscriptionChargeFailed extends Base {}

@@ -1,59 +1,27 @@
 <?php
-/**
- * This class is a listener for order completed events.
- *
- * It updates or creates related order model so that you can show payment
- * and bill details to your customers.
- *
- * @author    Bilal Gultekin <bilal@gultekin.me>
- * @author    Justin Hartman <justin@22digital.co.za>
- * @copyright 2019 22 Digital
- * @license   MIT
- * @since     v0.1
- */
 
-namespace TwentyTwoDigital\CashierFastspring\Listeners;
+namespace Photalika\CashierForFastspring\Listeners;
 
-use TwentyTwoDigital\CashierFastspring\Events;
-use TwentyTwoDigital\CashierFastspring\Invoice;
+use Photalika\CashierForFastspring\Events;
+use Photalika\CashierForFastspring\Invoice;
 
-/**
- * This class describes an order completed.
- *
- * Note: "order.completed" event is works just at creation for subscription products.
- * IMPORTANT: This class handles expansion enabled webhooks
- *
- * {@inheritdoc}
- */
 class OrderCompleted extends Base
 {
-    /**
-     * Create the event listener.
-     *
-     * @return null
-     */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct() {}
 
     /**
      * Handle the event.
-     *
-     * @param \TwentyTwoDigital\CashierFastspring\Events\OrderCompleted $event
-     *
-     * @return void
      */
-    public function handle(Events\OrderCompleted $event)
+    public function handle(Events\OrderCompleted $orderCompleted): void
     {
         // Try to find that invoice on the database if not exists then create
         // one
-        $data = $event->data;
+        $data = $orderCompleted->data;
         $subscription = $data['items'][0]['subscription'];
 
         $invoice = Invoice::firstOrNew([
             'fastspring_id' => $data['id'],
-            'type'          => 'subscription',
+            'type' => 'subscription',
         ]);
 
         $periodStartDate = $subscription['nextInSeconds'];
