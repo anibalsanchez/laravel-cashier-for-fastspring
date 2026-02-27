@@ -24,6 +24,8 @@ class FastspringTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         // prepare class for testing
         $mockHandler = new MockHandler(array_fill(
             0,
