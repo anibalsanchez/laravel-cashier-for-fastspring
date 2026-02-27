@@ -149,7 +149,7 @@ class ApiClient
      *
      * @param  array  $account  Account details
      *
-     * @see https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts Account details
+     * @see https://developer.fastspring.com/reference/accounts Account details
      *
      * @return object Response of fastspring
      */
@@ -164,7 +164,7 @@ class ApiClient
      * @param  string  $fastspringId  Fastspring ID of related account
      * @param  array  $account  Account details
      *
-     * @see https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/accounts Account details
+     * @see https://developer.fastspring.com/reference/accounts Account details
      *
      * @return object Response of fastspring
      */
@@ -201,7 +201,7 @@ class ApiClient
      *
      * @param  array  $session  Sessions details
      *
-     * @see https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/sessions Session details
+     * @see https://developer.fastspring.com/reference/sessions Session details
      *
      * @return object Response of fastspring
      */
@@ -226,7 +226,7 @@ class ApiClient
      *
      * @param  array  $subscriptionIds  Fastspring ids of subscriptions
      *
-     * @see https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/subscriptions#id-/subscriptions-Getoneormoresubscriptioninstances
+     * @see https://developer.fastspring.com/reference/subscriptions
      *
      * @return object Response of fastspring
      */
@@ -243,7 +243,7 @@ class ApiClient
      *
      * @param  array  $subscriptionId  Fastspring id of subscriptions
      *
-     * @see https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/subscriptions#id-/subscriptions-Getoneormoresubscriptioninstances
+     * @see https://developer.fastspring.com/reference/subscriptions
      *
      * @return object Response of fastspring
      */
@@ -261,7 +261,7 @@ class ApiClient
      * @param  array  $subscriptions  Data of all subscriptions wanted to be
      *                                updated (should include subscription => $id)
      *
-     * @see https://docs.fastspring.com/integrating-with-fastspring/fastspring-api/subscriptions#id-/subscriptions-Updateexistingsubscriptioninstances
+     * @see https://developer.fastspring.com/reference/subscriptions
      *
      * @return object Response of fastspring
      */

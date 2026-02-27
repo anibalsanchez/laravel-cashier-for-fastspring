@@ -34,7 +34,7 @@
 
 ## Introduction
 
-Cashier For Fastspring is a cashier-like laravel package which provides interface to [Fastspring](https://fastspring.com) subscription and payment services. This package handles webhooks and provides a simple API for Fastspring. Before using this package, looking at [Fastspring documentation](http://docs.fastspring.com/) is strongly recommended.
+Cashier For Fastspring is a cashier-like laravel package which provides interface to [Fastspring](https://fastspring.com) subscription and payment services. This package handles webhooks and provides a simple API for Fastspring. Before using this package, looking at [Fastspring documentation](https://developer.fastspring.com/docs/) is strongly recommended.
 
 ## Installation
 
@@ -194,9 +194,9 @@ $builder = Auth::user()->newSubscription('default', $selectedPlan);
 $session = $builder->create();
 ```
 
-You can provide session id `$session->id` to Fastspring's [Popup Storefronts](http://docs.fastspring.com/storefronts/popup-storefronts-on-your-website) or [Web Storefronts](http://docs.fastspring.com/storefronts/web-storefronts).
+You can provide session id `$session->id` to Fastspring's [Popup Storefronts](https://developer.fastspring.com/docs/popup-checkout-overview) or [Web Storefronts](https://developer.fastspring.com/docs/web-checkout-overview).
 
-Note: `newSubscription` method does not create a subscription model. After a successful payment, you can use [webhooks](#webhooks) or [browser script](http://docs.fastspring.com/integrating-with-fastspring/webhooks#Webhooks-BrowserScripts) to inform your app and create related models.
+Note: `newSubscription` method does not create a subscription model. After a successful payment, you can use [webhooks](#webhooks) or [browser script](https://developer.fastspring.com/reference/webhooks-overview) to inform your app and create related models.
 
 ## Usage
 
@@ -208,7 +208,7 @@ Cashier For Fastspring provides a `local` type of subscription which lets you to
 
 #### Creating Subscriptions
 
-To create a subscription, you can use `newSubscription` method of the `Billable` model. After creating session, you can provide session id `$session->id` to Fastspring's [Popup Storefronts](http://docs.fastspring.com/storefronts/popup-storefronts-on-your-website) or [Web Storefronts](http://docs.fastspring.com/storefronts/web-storefronts).
+To create a subscription, you can use `newSubscription` method of the `Billable` model. After creating session, you can provide session id `$session->id` to Fastspring's [Popup Storefronts](https://developer.fastspring.com/docs/popup-checkout-overview) or [Web Storefronts](https://developer.fastspring.com/docs/web-checkout-overview).
 
 ```php
 // we create session and return it to frontend to care
@@ -283,7 +283,7 @@ if ($user->subscribedToPlan('monthly', 'default')) {
 
 #### Changing Plans
 
-You can change current plan of a `Billable` model by using `swap` method as below. Before using this, it is recommended to look at [Prorating when Upgrading or Downgrading Subscription Plans](http://docs.fastspring.com/activity-events-orders-and-subscriptions/managing-active-subscriptions/prorating-when-upgrading-or-downgrading-subscription-plans).
+You can change current plan of a `Billable` model by using `swap` method as below. Before using this, it is recommended to look at [Prorate plan changes](https://developer.fastspring.com/docs/manage-active-subscriptions#prorate-plan-changes).
 
 ```php
 $user = App\User::find(1);
