@@ -113,8 +113,12 @@ You should add Fastspring configuration to `config/services.php` file.
     'username' => env('FASTSPRING_USERNAME'),
     'password' => env('FASTSPRING_PASSWORD'),
 
-    // strongly recommend to set hmac secret in webhook configuration
-    // to prevent webhook spoofing
+
+    //
+    // HMAC SHA256 Secret: Optionally specify a secret phrase for creating a digest of the payload.
+    //
+    // Message Security: https://developer.fastspring.com/reference/message-security
+    //
     'hmac_secret' => env('FASTSPRING_HMAC_SECRET')
 ],
 ```
