@@ -17,19 +17,9 @@ use Photalika\CashierForFastspring\SubscriptionPeriod;
  * It updates related subscription event.
  *
  * IMPORTANT: This class handles expansion enabled webhooks.
- *
- * {@inheritdoc}
  */
-class SubscriptionActivated extends Base
+class SubscriptionActivated
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Handle the event.
      */
@@ -38,7 +28,7 @@ class SubscriptionActivated extends Base
         $data = $subscriptionActivated->data;
 
         // first look for is there any subscription
-        $billable = $this->getBillableByFastspringId($data['account']['id']);
+        $billable = $subscriptionActivated->billable();
         $subscriptionName = $data['tags']['name'] ?? 'default';
 
         $subscription = $billable->subscription();

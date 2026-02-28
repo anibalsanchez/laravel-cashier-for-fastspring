@@ -6,10 +6,8 @@ namespace Photalika\CashierForFastspring\Listeners;
 
 use Photalika\CashierForFastspring\Events;
 
-class OrderCompleted extends Base
+class OrderCompleted
 {
-    public function __construct() {}
-
     /**
      * Handle the event.
      */
@@ -29,7 +27,7 @@ class OrderCompleted extends Base
         $periodStartDate = $subscription['nextInSeconds'];
         $periodEndDate = $subscription['beginInSeconds'];
 
-        $billable = $this->getBillableByFastspringId($data['account']['id']);
+        $billable = $orderCompleted->billable();
 
         // fill the model
         $invoice->subscription_sequence = $subscription['sequence'];

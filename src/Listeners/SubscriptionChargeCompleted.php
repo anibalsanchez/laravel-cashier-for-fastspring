@@ -14,19 +14,9 @@ use Photalika\CashierForFastspring\Events;
  * and bill details to your billables.
  *
  * IMPORTANT: This class handles expansion enabled webhooks.
- *
- * {@inheritdoc}
  */
-class SubscriptionChargeCompleted extends Base
+class SubscriptionChargeCompleted
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Handle the event.
      */
@@ -57,7 +47,7 @@ class SubscriptionChargeCompleted extends Base
         $methodName = 'sub'.Str::title($subscription->interval_unit).'sNoOverflow';
         $periodStartDate = $nextDate->$methodName($subscription->interval_length)->addDay()->format('Y-m-d H:i:s');
 
-        $billable = $this->getBillableByFastspringId($data['account']['id']);
+        $billable = $subscriptionChargeCompleted->billable();
 
         // fill the model
         $invoice->subscription_sequence = $data['subscription']['sequence'];

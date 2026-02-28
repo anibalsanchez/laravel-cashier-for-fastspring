@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Events;
 
-class OrderCompleted extends Base {}
+class OrderCompleted extends FastSpringEvent {}

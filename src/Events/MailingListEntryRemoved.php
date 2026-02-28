@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Events;
 
-class MailingListEntryRemoved extends Base {}
+class MailingListEntryRemoved extends FastSpringEvent {}

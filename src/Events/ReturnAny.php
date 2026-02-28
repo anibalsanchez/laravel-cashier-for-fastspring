@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Events;
 
-class ReturnAny extends Base {}
+class ReturnAny extends FastSpringEvent {}

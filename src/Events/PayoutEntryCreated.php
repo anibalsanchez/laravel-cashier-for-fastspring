@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Events;
 
-class PayoutEntryCreated extends Base {}
+class PayoutEntryCreated extends FastSpringEvent {}

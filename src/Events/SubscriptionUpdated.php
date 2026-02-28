@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Events;
 
-class SubscriptionUpdated extends Base {}
+class SubscriptionUpdated extends FastSpringEvent {}

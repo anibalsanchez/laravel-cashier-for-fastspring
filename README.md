@@ -190,7 +190,7 @@ protected $listen = [
         SubscriptionStateChanged::class,
     ],
     SubscriptionDeactivated::class => [
-        SubscriptionDeactivatedListener::class,
+        SubscriptionStateChanged::class,
     ],
     SubscriptionPaymentOverdue::class => [
         SubscriptionStateChanged::class,
