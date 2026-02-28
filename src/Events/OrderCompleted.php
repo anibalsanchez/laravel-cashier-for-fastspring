@@ -4,4 +4,12 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Events;
 
-class OrderCompleted extends FastSpringEvent {}
+use Photalika\CashierForFastspring\Events\Models\Order;
+
+class OrderCompleted extends FastSpringEvent
+{
+    public function order(): Order
+    {
+        return new Order($this->data);
+    }
+}
