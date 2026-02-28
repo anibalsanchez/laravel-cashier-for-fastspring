@@ -10,6 +10,7 @@
     - [Migrations](#migrations)
     - [Billable Model](#billable-model)
     - [API Keys](#api-keys)
+    - [Customizing Models](#customizing-models)
     - [Webhook Route](#webhook-route)
       - [Webhooks \& CSRF Protection](#webhooks--csrf-protection)
     - [Creating Plans](#creating-plans)
@@ -37,6 +38,8 @@
 Cashier For Fastspring is a cashier-like laravel package which provides interface to [Fastspring](https://fastspring.com) subscription and payment services. This package handles webhooks and provides a simple API for Fastspring. Before using this package, looking at [Fastspring documentation](https://developer.fastspring.com/docs/) is strongly recommended.
 
 ## Installation
+
+> **Note**: This package requires **PHP 8.2 or superior+** and **Laravel 12+**. It strictly adheres to PSR-12 and modern strict-type definitions.
 
 Add `anibalsanchez/laravel-cashier-for-fastspring` package to your dependencies.
 
@@ -92,7 +95,7 @@ After publishing them, you can find migration files in your `database/migrations
 
 ### Billable Model
 
-Next, add the Billable trait to your model definition. This trait provides various methods to allow you to perform common billing tasks, such as creating and checking subscriptions, getting orders etc.
+Next, add the Billable trait to your model definition. This trait provides various methods to allow you to perform common billing tasks, such as creating and checking subscriptions, getting orders etc. Cashier uses polymorphic relations to bind `Account`, `Subscription`, and `Invoice` to your billable model.
 
 ```php
 use Photalika\CashierForFastspring\Billable;
@@ -109,7 +112,6 @@ You should add Fastspring configuration to `config/services.php` file.
 
 ```php
 'fastspring' => [
-    'model' => App\User::class,
     'username' => env('FASTSPRING_USERNAME'),
     'password' => env('FASTSPRING_PASSWORD'),
 
@@ -121,6 +123,21 @@ You should add Fastspring configuration to `config/services.php` file.
     //
     'hmac_secret' => env('FASTSPRING_HMAC_SECRET')
 ],
+```
+
+### Customizing Models
+
+By default, Cashier for FastSpring uses its own `Account`, `Subscription`, and `Invoice` models. If you need to extend or customize these models, you can instruct Cashier to use your custom classes via the `Cashier` facade, typically within the `boot` method of your `AppServiceProvider`.
+
+```php
+use Photalika\CashierForFastspring\Cashier;
+
+public function boot(): void
+{
+    Cashier::useAccountModel(App\Models\Account::class);
+    Cashier::useSubscriptionModel(App\Models\Subscription::class);
+    Cashier::useInvoiceModel(App\Models\Invoice::class);
+}
 ```
 
 ### Webhook Route
@@ -229,16 +246,16 @@ $builder = Auth::user()->newSubscription('default', $selectedPlan)
 $session = $builder->create();
 ```
 
-If the `Billable` model is not created as Fastspring customer yet `newSubscription` model creates it automatically and saves `fastspring_id`. If you want to do this manually you can use `createAsFastspringCustomer` method.
+If the `Billable` model is not created as a Fastspring billable yet `newSubscription` model creates it automatically and saves the `fastspring_id` on the related `Account` model. If you want to do this manually you can use the `createAsFastspringBillable` method.
 
 ```php
-$apiResponse = Auth::user()->createAsFastspringCustomer();
+$apiResponse = Auth::user()->createAsFastspringBillable();
 ```
 
-If details of a `Billable` model is updated, you can also update them at Fastspring side with `updateAsFastspringCustomer` method.
+If details of a `Billable` model are updated, you can also update them at the Fastspring side with the `updateAsFastspringBillable` method.
 
 ```php
-$apiResponse = Auth::user()->updateAsFastspringCustomer();
+$apiResponse = Auth::user()->updateAsFastspringBillable();
 ```
 
 #### Checking Subscription Status
@@ -290,7 +307,7 @@ if ($user->subscribedToPlan('monthly', 'default')) {
 You can change current plan of a `Billable` model by using `swap` method as below. Before using this, it is recommended to look at [Prorate plan changes](https://developer.fastspring.com/docs/manage-active-subscriptions#prorate-plan-changes).
 
 ```php
-$user = App\User::find(1);
+$user = App\Models\User::find(1);
 
 $user->subscription('default')->swap('provider-plan-id', $prorate, $quantity, $coupons);
 ```

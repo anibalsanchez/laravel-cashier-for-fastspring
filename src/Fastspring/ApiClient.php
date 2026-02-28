@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring\Fastspring;
 
 use GuzzleHttp\Client;

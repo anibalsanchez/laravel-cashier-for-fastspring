@@ -20,6 +20,7 @@ trait Database
     protected function tearDown(): void
     {
         Schema::drop('users');
+        Schema::drop('accounts');
         Schema::drop('subscriptions');
         Schema::drop('invoices');
 
@@ -29,19 +30,36 @@ trait Database
     public function createUsersTable(): void
     {
         Schema::create('users', function ($table): void {
-            $table->increments('id');
+            $table->id();
             $table->string('email');
             $table->string('name');
-            $table->string('fastspring_id')->nullable();
             $table->timestamps();
+        });
+    }
+
+    public function createAccountsTable(): void
+    {
+        Schema::create('accounts', function ($table): void {
+            $table->id();
+            $table->foreignId('billable_id');
+            $table->string('billable_type');
+            $table->string('fastspring_id')->unique();
+            $table->string('company')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('language')->nullable();
+            $table->string('country')->nullable();
+            $table->timestamps();
+
+            $table->index(['billable_id', 'billable_type']);
         });
     }
 
     public function createSubscriptionsTable(): void
     {
         Schema::create('subscriptions', function ($table): void {
-            $table->increments('id');
-            $table->unsignedInteger('user_id');
+            $table->id();
+            $table->foreignId('billable_id');
+            $table->string('billable_type');
             $table->string('name');
             $table->string('fastspring_id')->nullable();
             $table->string('plan');
@@ -54,14 +72,14 @@ trait Database
             $table->datetime('swap_at')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->index(['billable_id', 'billable_type']);
         });
     }
 
     public function createSubscriptionPeriodsTable(): void
     {
         Schema::create('subscription_periods', function ($table): void {
-            $table->increments('id');
+            $table->id();
             $table->unsignedInteger('subscription_id');
             $table->string('type');
             $table->date('start_date');
@@ -75,9 +93,10 @@ trait Database
     public function createInvoicesTable(): void
     {
         Schema::create('invoices', function ($table): void {
-            $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->string('fastspring_id')->nullable();
+            $table->id();
+            $table->foreignId('billable_id');
+            $table->string('billable_type');
+            $table->string('fastspring_id')->unique()->nullable();
             $table->string('type')->nullable(); // subscription, order
             $table->string('subscription_display')->nullable();
             $table->string('subscription_product')->nullable();
@@ -94,7 +113,7 @@ trait Database
             $table->datetime('subscription_period_end_date')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->index(['billable_id', 'billable_type']);
         });
     }
 }

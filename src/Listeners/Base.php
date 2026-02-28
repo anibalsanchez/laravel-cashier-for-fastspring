@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring\Listeners;
 
 /**
@@ -11,12 +13,10 @@ class Base
      * Get the billable entity instance by Fastspring ID.
      *
      * @param  string  $fastspringId
-     * @return \Photalika\CashierForFastspring\Billable
+     * @return \Photalika\CashierForFastspring\Billable|null
      */
-    public function getUserByFastspringId($fastspringId)
+    public function getBillableByFastspringId($fastspringId)
     {
-        $model = getenv('FASTSPRING_MODEL') ?: config('services.fastspring.model');
-
-        return (new $model)->where('fastspring_id', $fastspringId)->first();
+        return \Photalika\CashierForFastspring\Cashier::findBillable($fastspringId);
     }
 }

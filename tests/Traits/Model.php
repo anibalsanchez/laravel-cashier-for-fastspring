@@ -8,10 +8,21 @@ trait Model
 {
     public function createUser($parameters = [])
     {
-        return User::create(array_merge([
+        $fastspringId = $parameters['fastspring_id'] ?? null;
+        unset($parameters['fastspring_id']);
+
+        $user = User::create(array_merge([
             'email' => 'test@test-email.me',
             'name' => 'Nombre Apellido',
         ], $parameters));
+
+        if ($fastspringId) {
+            $user->account()->create([
+                'fastspring_id' => $fastspringId,
+            ]);
+        }
+
+        return $user;
     }
 
     public function createSubscription($user, $parameters = [])

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring\Listeners;
 
 use Photalika\CashierForFastspring\Events;
-use Photalika\CashierForFastspring\Subscription;
 
 /**
  * This class is a listener for subscription state change events.
@@ -34,10 +35,14 @@ class SubscriptionStateChanged extends Base
         $data = $base->data;
 
         // create
-        $subscription = Subscription::where('fastspring_id', $data['id'])->firstOrFail();
+        $subscriptionModel = \Photalika\CashierForFastspring\Cashier::$subscriptionModel;
+        $subscription = $subscriptionModel::where('fastspring_id', $data['id'])->firstOrFail();
+
+        $billable = $this->getBillableByFastspringId($data['account']['id']);
 
         // fill
-        $subscription->user_id = $this->getUserByFastspringId($data['account']['id'])->id;
+        $subscription->billable_id = $billable->id;
+        $subscription->billable_type = $billable->getMorphClass();
         $subscription->plan = $data['product']['product'];
         $subscription->state = $data['state'];
         $subscription->currency = $data['currency'];

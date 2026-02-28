@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring;
 
 use Illuminate\Support\ServiceProvider;
@@ -16,27 +18,20 @@ class CashierServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $time = time();
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-        // publish migrations
-        $this->publishes([
-            __DIR__.'/../resources/migrations/create_subscriptions_table_for_cashier_fastspring.php' => sprintf(
-                database_path('migrations').'/%s_create_subscriptions_table_for_cashier_fastspring.php',
-                date('Y_m_d_His', $time)
-            ),
-            __DIR__.'/../resources/migrations/upgrade_user_table_for_cashier_fastspring.php' => sprintf(
-                database_path('migrations').'/%s_upgrade_user_table_for_cashier_fastspring.php',
-                date('Y_m_d_His', ++$time)
-            ),
-            __DIR__.'/../resources/migrations/create_invoices_table_for_cashier_fastspring.php' => sprintf(
-                database_path('migrations').'/%s_create_invoices_table_for_cashier_fastspring.php',
-                date('Y_m_d_His', ++$time)
-            ),
-            __DIR__.'/../resources/migrations/create_subscription_periods_table_for_cashier_fastspring.php' => sprintf(
-                database_path('migrations').'/%s_create_subscription_periods_table_for_cashier_fastspring.php',
-                date('Y_m_d_His', ++$time)
-            ),
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/fastspring.php' => config_path('fastspring.php'),
+            ], 'fastspring-config');
+
+            $this->publishes([
+                __DIR__.'/../database/migrations/2026_02_28_000001_create_invoices_table.php' => database_path('migrations/2026_02_28_000001_create_invoices_table.php'),
+                __DIR__.'/../database/migrations/2026_02_28_000002_create_subscription_periods_table.php' => database_path('migrations/2026_02_28_000002_create_subscription_periods_table.php'),
+                __DIR__.'/../database/migrations/2026_02_28_000003_create_subscriptions_table.php' => database_path('migrations/2026_02_28_000003_create_subscriptions_table.php'),
+                __DIR__.'/../database/migrations/2026_02_28_000004_create_accounts_table.php' => database_path('migrations/2026_02_28_000004_create_accounts_table.php'),
+            ], 'fastspring-migrations');
+        }
     }
 
     /**
@@ -44,6 +39,9 @@ class CashierServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/fastspring.php',
+            'fastspring'
+        );
     }
 }

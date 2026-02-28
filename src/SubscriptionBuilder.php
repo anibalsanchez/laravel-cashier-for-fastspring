@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring;
 
 use GuzzleHttp\Exception\ClientException;
@@ -18,7 +20,7 @@ class SubscriptionBuilder
     protected $quantity = 1;
 
     /**
-     * The coupon code being applied to the customer.
+     * The coupon code being applied to the billable.
      *
      * @var string|null
      */
@@ -80,7 +82,7 @@ class SubscriptionBuilder
      */
     public function create()
     {
-        $fastspringId = $this->getFastspringIdOfCustomer();
+        $fastspringId = $this->getFastspringIdOfBillable();
 
         return Fastspring::createSession($this->buildPayload($fastspringId));
     }
@@ -98,11 +100,12 @@ class SubscriptionBuilder
      *
      * @throws Exception
      */
-    protected function getFastspringIdOfCustomer()
+    protected function getFastspringIdOfBillable()
     {
-        if (! $this->owner->fastspring_id) {
+        if (! $this->owner->hasFastspringId()) {
             try {
-                $customer = $this->owner->createAsFastspringCustomer();
+                $billable = $this->owner->createAsFastspringBillable();
+                $this->owner->load('account');
             } catch (ClientException $e) {
                 // we should get its id and save it
                 $response = $e->getResponse();
@@ -115,8 +118,10 @@ class SubscriptionBuilder
                         $account = $response->accounts[0];
 
                         // save it to eloquent model
-                        $this->owner->fastspring_id = $account->id;
-                        $this->owner->save();
+                        $this->owner->account()->create([
+                            'fastspring_id' => $account->id,
+                        ]);
+                        $this->owner->load('account');
                     }
                 } else {
                     throw $e; // @codeCoverageIgnore
@@ -124,7 +129,7 @@ class SubscriptionBuilder
             }
         }
 
-        return $this->owner->fastspring_id;
+        return $this->owner->account->fastspring_id;
     }
 
     /**

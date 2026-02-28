@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring;
 
 use Illuminate\Database\Eloquent\Model;
@@ -21,8 +23,8 @@ class SubscriptionPeriod extends Model
     protected function casts(): array
     {
         return [
-            'start_date' => 'date',
-            'end_date' => 'date',
+            'start_date' => 'datetime',
+            'end_date' => 'datetime',
 
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
@@ -36,7 +38,7 @@ class SubscriptionPeriod extends Model
      */
     public function subscription()
     {
-        return $this->belongsTo(\Photalika\CashierForFastspring\Subscription::class);
+        return $this->belongsTo(\Photalika\CashierForFastspring\Cashier::$subscriptionModel);
     }
 
     public function getCarbonStartDate(): void {}

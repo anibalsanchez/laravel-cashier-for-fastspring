@@ -26,6 +26,7 @@ class SubscriptionPeriodTest extends TestCase
 
         // create tables
         $this->createUsersTable();
+        $this->createAccountsTable();
         $this->createSubscriptionsTable();
         $this->createSubscriptionPeriodsTable();
         $this->createInvoicesTable();

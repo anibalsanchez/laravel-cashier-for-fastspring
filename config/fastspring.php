@@ -4,19 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Billable Model
-    |--------------------------------------------------------------------------
-    |
-    | This is the model in your application that implements the Billable trait
-    | provided by Cashier For Fastspring. It will be used to retrieve and store
-    | the Fastspring ID and other billing-related information.
-    |
-    */
-
-    'model' => env('FASTSPRING_MODEL', App\User::class),
-
-    /*
-    |--------------------------------------------------------------------------
     | Fastspring Credentials
     |--------------------------------------------------------------------------
     |

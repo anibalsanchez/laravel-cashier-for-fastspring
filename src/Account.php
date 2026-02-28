@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Photalika\CashierForFastspring;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
- * This class describes an invoice.
+ * This class describes an Account.
  *
  * {@inheritdoc}
  */
-class Invoice extends Model
+class Account extends Model
 {
     /**
      * The attributes that are not mass assignable.
@@ -24,18 +23,17 @@ class Invoice extends Model
     protected function casts(): array
     {
         return [
-            'subscription_period_start_date' => 'datetime',
-            'subscription_period_end_date' => 'datetime',
-
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
     }
 
     /**
-     * Get the billable model related to the invoice.
+     * Get the billable model related to the account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function billable(): MorphTo
+    public function billable()
     {
         return $this->morphTo();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring\Events;
 
 use Illuminate\Queue\SerializesModels;

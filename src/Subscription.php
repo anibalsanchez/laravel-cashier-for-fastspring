@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring;
 
 use Carbon\Carbon;
@@ -25,9 +27,10 @@ class Subscription extends Model
     protected function casts(): array
     {
         return [
+            'swap_at' => 'datetime',
+
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'swap_at' => 'datetime',
         ];
     }
 
@@ -39,11 +42,13 @@ class Subscription extends Model
     protected $billingCycleAnchor;
 
     /**
-     * Get the user that owns the subscription.
+     * Get the billable model related to the subscription.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function user()
+    public function billable()
     {
-        return $this->owner();
+        return $this->morphTo();
     }
 
     /**
@@ -227,20 +232,6 @@ class Subscription extends Model
         ));
 
         return $lastPeriod;
-    }
-
-    /**
-     * Get the model related to the subscription.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function owner()
-    {
-        $model = getenv('FASTSPRING_MODEL') ?: config('services.fastspring.model', 'App\\User');
-
-        $model = new $model;
-
-        return $this->belongsTo($model::class, $model->getForeignKey());
     }
 
     /**

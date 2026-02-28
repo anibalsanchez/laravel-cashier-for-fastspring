@@ -30,6 +30,7 @@ class ListenersTest extends TestCase
 
         // create tables
         $this->createUsersTable();
+        $this->createAccountsTable();
         $this->createSubscriptionsTable();
         $this->createSubscriptionPeriodsTable();
         $this->createInvoicesTable();

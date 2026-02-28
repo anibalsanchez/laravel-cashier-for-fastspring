@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring\Listeners;
 
 use Photalika\CashierForFastspring\Events;
-use Photalika\CashierForFastspring\Subscription;
 use Photalika\CashierForFastspring\SubscriptionPeriod;
 
 /**
@@ -37,14 +38,16 @@ class SubscriptionActivated extends Base
         $data = $subscriptionActivated->data;
 
         // first look for is there any subscription
-        $billable = $this->getUserByFastspringId($data['account']['id']);
+        $billable = $this->getBillableByFastspringId($data['account']['id']);
         $subscriptionName = $data['tags']['name'] ?? 'default';
 
         $subscription = $billable->subscription();
 
         if (! $subscription) {
-            $subscription = new Subscription;
-            $subscription->user_id = $billable->id;
+            $subscriptionModel = \Photalika\CashierForFastspring\Cashier::$subscriptionModel;
+            $subscription = new $subscriptionModel;
+            $subscription->billable_id = $billable->id;
+            $subscription->billable_type = $billable->getMorphClass();
             $subscription->name = $subscriptionName;
         }
 

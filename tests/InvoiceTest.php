@@ -4,7 +4,6 @@ namespace Photalika\CashierForFastspring\Tests;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Orchestra\Testbench\TestCase;
-use Photalika\CashierForFastspring\Tests\Fixtures\User;
 use Photalika\CashierForFastspring\Tests\Traits\Database;
 use Photalika\CashierForFastspring\Tests\Traits\Model;
 
@@ -26,6 +25,7 @@ class InvoiceTest extends TestCase
 
         // create tables
         $this->createUsersTable();
+        $this->createAccountsTable();
         $this->createSubscriptionsTable();
         $this->createSubscriptionPeriodsTable();
         $this->createInvoicesTable();
@@ -38,7 +38,7 @@ class InvoiceTest extends TestCase
     {
         $email = 'test@test-email.me';
 
-        $user = User::create([
+        $user = $this->createUser([
             'email' => $email,
             'name' => 'Nombre Apellido',
             'fastspring_id' => 'fastspring_id',
@@ -68,7 +68,7 @@ class InvoiceTest extends TestCase
         $this->assertInstanceOf(\Carbon\Carbon::class, $invoice->updated_at);
         $this->assertInstanceOf(\Carbon\Carbon::class, $invoice->subscription_period_start_date);
         $this->assertInstanceOf(\Carbon\Carbon::class, $invoice->subscription_period_end_date);
-        $this->assertEquals($invoice->user->email, $email);
+        $this->assertEquals($invoice->billable->email, $email);
     }
 
     /**

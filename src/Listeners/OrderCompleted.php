@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring\Listeners;
 
 use Photalika\CashierForFastspring\Events;
-use Photalika\CashierForFastspring\Invoice;
 
 class OrderCompleted extends Base
 {
@@ -19,7 +20,8 @@ class OrderCompleted extends Base
         $data = $orderCompleted->data;
         $subscription = $data['items'][0]['subscription'];
 
-        $invoice = Invoice::firstOrNew([
+        $invoiceModel = \Photalika\CashierForFastspring\Cashier::$invoiceModel;
+        $invoice = $invoiceModel::firstOrNew([
             'fastspring_id' => $data['id'],
             'type' => 'subscription',
         ]);
@@ -27,9 +29,12 @@ class OrderCompleted extends Base
         $periodStartDate = $subscription['nextInSeconds'];
         $periodEndDate = $subscription['beginInSeconds'];
 
+        $billable = $this->getBillableByFastspringId($data['account']['id']);
+
         // fill the model
         $invoice->subscription_sequence = $subscription['sequence'];
-        $invoice->user_id = $this->getUserByFastspringId($data['account']['id'])->id;
+        $invoice->billable_id = $billable->id;
+        $invoice->billable_type = $billable->getMorphClass();
         $invoice->subscription_display = $subscription['display'];
         $invoice->subscription_product = $subscription['product'];
         $invoice->invoice_url = $data['invoiceUrl'];

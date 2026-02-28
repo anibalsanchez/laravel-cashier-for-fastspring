@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Photalika\CashierForFastspring\Listeners;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Photalika\CashierForFastspring\Events;
-use Photalika\CashierForFastspring\Invoice;
-use Photalika\CashierForFastspring\Subscription;
 
 /**
  * This class is a listener for subscription charge completed events.
  * It updates or creates related order model so that you can show payment
- * and bill details to your customers.
+ * and bill details to your billables.
  *
  * IMPORTANT: This class handles expansion enabled webhooks.
  *
@@ -37,13 +37,15 @@ class SubscriptionChargeCompleted extends Base
         // if not exists then create one
         $data = $subscriptionChargeCompleted->data;
 
-        $invoice = Invoice::firstOrNew([
+        $invoiceModel = \Photalika\CashierForFastspring\Cashier::$invoiceModel;
+        $invoice = $invoiceModel::firstOrNew([
             'fastspring_id' => $data['order']['id'],
             'type' => 'subscription',
         ]);
 
         // retrieve subscription to change state of it
-        $subscription = Subscription::where('fastspring_id', $data['subscription']['id'])->first();
+        $subscriptionModel = \Photalika\CashierForFastspring\Cashier::$subscriptionModel;
+        $subscription = $subscriptionModel::where('fastspring_id', $data['subscription']['id'])->first();
 
         // unfortunately fastspring does not provide subscription
         // dates with this event event their doc says it provides
@@ -55,9 +57,12 @@ class SubscriptionChargeCompleted extends Base
         $methodName = 'sub'.Str::title($subscription->interval_unit).'sNoOverflow';
         $periodStartDate = $nextDate->$methodName($subscription->interval_length)->addDay()->format('Y-m-d H:i:s');
 
+        $billable = $this->getBillableByFastspringId($data['account']['id']);
+
         // fill the model
         $invoice->subscription_sequence = $data['subscription']['sequence'];
-        $invoice->user_id = $this->getUserByFastspringId($data['account']['id'])->id;
+        $invoice->billable_id = $billable->id;
+        $invoice->billable_type = $billable->getMorphClass();
         $invoice->subscription_display = $data['subscription']['display'];
         $invoice->subscription_product = $data['subscription']['product'];
         $invoice->invoice_url = $data['order']['invoiceUrl'];

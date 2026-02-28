@@ -30,6 +30,7 @@ class SubscriptionTest extends TestCase
 
         // create tables
         $this->createUsersTable();
+        $this->createAccountsTable();
         $this->createSubscriptionsTable();
         $this->createSubscriptionPeriodsTable();
         $this->createInvoicesTable();
@@ -43,14 +44,14 @@ class SubscriptionTest extends TestCase
         $this->assertInstanceOf(Subscription::class, new Subscription);
     }
 
-    public function test_owner(): void
+    public function test_billable(): void
     {
         $email = 'test@test-email.me';
 
         $user = $this->createUser(['email' => $email, 'fastspring_id' => 'fastspring_id']);
         $subscription = $this->createSubscription($user, ['state' => 'active']);
 
-        $this->assertEquals($subscription->user->email, $email);
+        $this->assertEquals($subscription->billable->email, $email);
     }
 
     public function test_periods(): void
