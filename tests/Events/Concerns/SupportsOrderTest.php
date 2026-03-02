@@ -1,16 +1,16 @@
 <?php
 
-namespace Photalika\CashierForFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests\Events\Concerns;
 
 use Orchestra\Testbench\TestCase;
 use Photalika\CashierForFastspring\Events\Models\Order;
 use Photalika\CashierForFastspring\Events\OrderCompleted;
 
-class OrderCompletedTest extends TestCase
+class SupportsOrderTest extends TestCase
 {
     public function test_order_method_returns_an_order_model_with_payload_data(): void
     {
-        $template = file_get_contents(__DIR__.'/Payloads/order_completed.json');
+        $template = file_get_contents(__DIR__.'/../../Payloads/order_completed.json');
         $payload = json_decode($template, true);
 
         $orderCompleted = new OrderCompleted('id', 'order.completed', false, true, time(), $payload);

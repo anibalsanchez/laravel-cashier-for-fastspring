@@ -1,4 +1,4 @@
-{  
+{
     "id":"{subscriptionId}",
     "subscription":"{subscriptionId}",
     "active":false,
@@ -9,10 +9,10 @@
     "changedDisplay":"10/16/17",
     "live":false,
     "currency":"USD",
-    "account":{  
+    "account":{
        "id":"{accountId}",
        "account":"{accountId}",
-       "contact":{  
+       "contact":{
           "first":"Marcellus",
           "last":"Walrus",
           "email":"ne1@all.com",
@@ -21,35 +21,35 @@
        },
        "language":"en",
        "country":"US",
-       "lookup":{  
+       "lookup":{
           "global":"TVWhu0iwQhKJyuhpT_2yMw"
        },
        "url":"https://furiousfalcon.onfastspring.com/account"
     },
-    "product":{  
+    "product":{
        "product":"falcon-monthly-variation",
        "parent":"falcon-monthly-subscriptions",
-       "display":{  
+       "display":{
           "en":"Falcon Monthly Subscription"
        },
-       "description":{  
-          "summary":{  
+       "description":{
+          "summary":{
              "en":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor."
           },
-          "action":{  
+          "action":{
              "en":"CLICK TO SUBSCRIBE"
           },
-          "full":{  
+          "full":{
              "en":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel mi quam. Etiam non purus et est volutpat aliquet."
           }
        },
        "image":"https://d8y8nchqlnmka.cloudfront.net/VTetZH1kQD8/DHPIZXJ7Thw/falcon-box_x2.png",
        "sku":"furious10",
-       "fulfillments":{  
-          "instructions":{  
+       "fulfillments":{
+          "instructions":{
              "en":"Thank you for subscribing to *Falcon*.  To register, please launch the trial version and select **Help** | **Register Falcon**. Then, copy and paste the license key above into the **License Key** field and click **Submit**."
           },
-          "falcon-monthly-variation_file_0":{  
+          "falcon-monthly-variation_file_0":{
              "fulfillment":"falcon-monthly-variation_file_0",
              "name":"File Download (FALCON4.exe)",
              "applicability":"NON_REBILL_ONLY",
@@ -57,8 +57,8 @@
              "url":null,
              "size":null,
              "behavior":"CURRENT",
-             "previous":[  
-                {  
+             "previous":[
+                {
                    "display":"Falcon.exe",
                    "size":5769,
                    "type":"application/octet-stream",
@@ -66,48 +66,48 @@
                 }
              ]
           },
-          "falcon-monthly-variation_license_1":{  
+          "falcon-monthly-variation_license_1":{
              "fulfillment":"falcon-monthly-variation_license_1",
              "name":"License Generator (Pre-defined List)",
              "applicability":"NON_REBILL_ONLY"
           }
        },
        "format":"digital",
-       "pricing":{  
+       "pricing":{
           "renew":"auto",
           "interval":"month",
           "intervalLength":1,
           "quantityBehavior":"hide",
           "quantityDefault":1,
-          "price":{  
+          "price":{
              "USD":14.95
           },
-          "quantityDiscounts":{  
-             "1":{  
+          "quantityDiscounts":{
+             "1":{
                 "USD":5.56
              }
           },
           "dateLimitsEnabled":true,
-          "dateLimits":{  
+          "dateLimits":{
              "start":"2017-10-31 00:00",
              "end":"2017-11-01 00:00"
           },
-          "discountReason":{  
+          "discountReason":{
              "en":"Halloween Special"
           },
           "discountDuration":1,
-          "reminderNotification":{  
+          "reminderNotification":{
              "enabled":true,
              "interval":"DAY",
              "intervalLength":1
           },
-          "overdueNotification":{  
+          "overdueNotification":{
              "enabled":true,
              "interval":"WEEK",
              "intervalLength":1,
              "amount":2
           },
-          "cancellation":{  
+          "cancellation":{
              "interval":"WEEK",
              "intervalLength":1
           }
@@ -130,7 +130,7 @@
     "subtotalDisplay":"$149.95",
     "subtotalInPayoutCurrency":149.95,
     "subtotalInPayoutCurrencyDisplay":"$149.95",
-    "attributes":{  
+    "attributes":{
        "CustomAttribute1":"CustomValue1",
        "CustomAttribute2":"CustomValue2"
     },
@@ -159,23 +159,23 @@
     "beginDisplay":"10/11/17",
     "intervalUnit":"month",
     "intervalLength":3,
-    "paymentReminder":{  
+    "paymentReminder":{
        "intervalUnit":"day",
        "intervalLength":1
     },
-    "paymentOverdue":{  
+    "paymentOverdue":{
        "intervalUnit":"week",
        "intervalLength":1,
        "total":2,
        "sent":0
     },
-    "cancellationSetting":{  
+    "cancellationSetting":{
        "cancellation":"AFTER_LAST_NOTIFICATION",
        "intervalUnit":"week",
        "intervalLength":1
     },
-    "instructions":[  
-       {  
+    "instructions":[
+       {
           "type":"regular",
           "periodStartDate":null,
           "periodStartDateValue":null,
@@ -215,4 +215,3 @@
        }
     ]
  }
- 

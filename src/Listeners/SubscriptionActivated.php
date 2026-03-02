@@ -7,27 +7,12 @@ namespace Photalika\CashierForFastspring\Listeners;
 use Photalika\CashierForFastspring\Events;
 use Photalika\CashierForFastspring\SubscriptionPeriod;
 
-/**
- * This class describes a subscription activated.
- *
- * It is planned to listen following fastspring events:
- *  - subscription.canceled
- *  - subscription.deactivated
- *  - subscription.payment.overdue
- * It updates related subscription event.
- *
- * IMPORTANT: This class handles expansion enabled webhooks.
- */
 class SubscriptionActivated
 {
-    /**
-     * Handle the event.
-     */
     public function handle(Events\SubscriptionActivated $subscriptionActivated): void
     {
         $data = $subscriptionActivated->data;
 
-        // first look for is there any subscription
         $billable = $subscriptionActivated->billable();
         $subscriptionName = $data['tags']['name'] ?? 'default';
 
@@ -41,7 +26,6 @@ class SubscriptionActivated
             $subscription->name = $subscriptionName;
         }
 
-        // fill
         $subscription->fastspring_id = $data['id'];
         $subscription->plan = $data['product']['product'];
         $subscription->state = $data['state'];
@@ -50,16 +34,11 @@ class SubscriptionActivated
         $subscription->interval_unit = $data['intervalUnit'];
         $subscription->interval_length = $data['intervalLength'];
 
-        // save
         $subscription->save();
 
-        // save instructions as periods
-        // since this is the first time subscription is created we dont need to
-        // check if it is already existed
         $instructions = $data['instructions'];
 
         foreach ($instructions as $instruction) {
-            // if end or start date is null don't insert
             if (is_null($instruction['periodStartDateInSeconds'])) {
                 continue;
             }
@@ -68,7 +47,7 @@ class SubscriptionActivated
                 continue;
             }
 
-            $subscriptionPeriod = SubscriptionPeriod::firstOrCreate([
+            SubscriptionPeriod::firstOrCreate([
                 'subscription_id' => $subscription->id,
                 'type' => 'fastspring',
                 'start_date' => date('Y-m-d', $instruction['periodStartDateInSeconds']),

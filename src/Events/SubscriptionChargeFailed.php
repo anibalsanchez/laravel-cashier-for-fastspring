@@ -4,4 +4,9 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Events;
 
-class SubscriptionChargeFailed extends FastSpringEvent {}
+use Photalika\CashierForFastspring\Events\Concerns\SupportsSubscription;
+
+class SubscriptionChargeFailed extends FastSpringEvent
+{
+    use SupportsSubscription;
+}

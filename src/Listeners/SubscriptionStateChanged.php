@@ -6,20 +6,8 @@ namespace Photalika\CashierForFastspring\Listeners;
 
 use Photalika\CashierForFastspring\Events;
 
-/**
- * This class is a listener for subscription state change events.
- * It is planned to listen following fastspring events:
- *  - subscription.canceled
- *  - subscription.payment.overdue
- * It updates related subscription event.
- *
- * IMPORTANT: This class handles expansion enabled webhooks.
- */
 class SubscriptionStateChanged
 {
-    /**
-     * Handle the event.
-     */
     public function handle(Events\FastSpringEvent $fastSpringEvent): void
     {
         $data = $fastSpringEvent->data;

@@ -1,5 +1,5 @@
-{  
-"order":{  
+{
+"order":{
     "order":"AxajJf8vQDC_YzEk7QY-7g",
     "id":"AxajJf8vQDC_YzEk7QY-7g",
     "reference":"FUR171013-2389-33111B",
@@ -36,17 +36,17 @@
     "discountWithTaxInPayoutCurrency":0.0,
     "discountWithTaxInPayoutCurrencyDisplay":"$0.00",
     "billDescriptor":"FS* fsprg.com",
-    "payment":{  
+    "payment":{
         "type":"test"
     },
-    "customer":{  
+    "customer":{
         "first":"Leeroy",
         "last":"Jenkins II",
         "email":"ne1@all.com",
         "company":"Chicken Danger, Inc.",
         "phone":null
     },
-    "address":{  
+    "address":{
         "city":"Santa Barbara",
         "regionCode":"CA",
         "regionDisplay":"California",
@@ -55,11 +55,11 @@
         "country":"US",
         "display":"Santa Barbara, California, 93101, US"
     },
-    "notes":[  
+    "notes":[
 
     ],
-    "items":[  
-        {  
+    "items":[
+        {
             "product":"falcon-monthly-variation",
             "quantity":1,
             "display":"Falcon Monthly Subscription",
@@ -73,7 +73,7 @@
             "discountInPayoutCurrency":0.0,
             "discountInPayoutCurrencyDisplay":"$0.00",
             "subscription":"5H8bPckiQDSWx9Qx4yqiDw",
-            "fulfillments":{  
+            "fulfillments":{
             "instructions":"<p>Thank you for subscribing to <em>Falcon</em>. To register, please launch the trial version and select <strong>Help</strong> | <strong>Register Falcon</strong>. Then, copy and paste the license key above into the <strong>License Key</strong> field and click <strong>Submit</strong>.</p>"
             }
         }
@@ -88,10 +88,10 @@
 "timestampDisplay":"10/13/17",
 "sequence":2,
 "periods":null,
-"account":{  
+"account":{
     "id":"{accountId}",
     "account":"{accountId}",
-    "contact":{  
+    "contact":{
         "first":"Marcellus",
         "last":"Walrus",
         "email":"ne1@all.com",
@@ -100,12 +100,12 @@
     },
     "language":"en",
     "country":"US",
-    "lookup":{  
+    "lookup":{
         "global":"TVWhu0iwQhKJyuhpT_2yMw"
     },
     "url":"https://furiousfalcon.onfastspring.com/account"
 },
-"subscription":{  
+"subscription":{
     "id":"{subscriptionId}",
     "subscription":"{subscriptionId}",
     "active":true,
@@ -135,7 +135,7 @@
     "subtotalDisplay":"$149.95",
     "subtotalInPayoutCurrency":149.95,
     "subtotalInPayoutCurrencyDisplay":"$149.95",
-    "attributes":{  
+    "attributes":{
         "CustomAttribute1":"CustomValue1",
         "CustomAttribute2":"CustomValue2"
     },
@@ -177,23 +177,23 @@
     "nextNotificationDateValue":1523318400000,
     "nextNotificationDateInSeconds":1523318400,
     "nextNotificationDateDisplay":"4/10/18",
-    "paymentReminder":{  
+    "paymentReminder":{
         "intervalUnit":"day",
         "intervalLength":1
     },
-    "paymentOverdue":{  
+    "paymentOverdue":{
         "intervalUnit":"week",
         "intervalLength":1,
         "total":2,
         "sent":0
     },
-    "cancellationSetting":{  
+    "cancellationSetting":{
         "cancellation":"AFTER_LAST_NOTIFICATION",
         "intervalUnit":"week",
         "intervalLength":1
     },
-    "instructions":[  
-        {  
+    "instructions":[
+        {
             "type":"regular",
             "periodStartDate":null,
             "periodStartDateValue":null,

@@ -1,4 +1,4 @@
-{  
+{
 "id":"ttyyWWxQRv-P0WXUYXphzg",
 "subscription":"ttyyWWxQRv-P0WXUYXphzg",
 "active":true,
@@ -12,7 +12,7 @@
 "account":{
     "id":"{accountId}",
     "account":"{accountId}",
-    "contact":{  
+    "contact":{
         "first":"Leeroy",
         "last":"Jenkins",
         "email":"ne1@all.com",
@@ -21,72 +21,72 @@
     },
     "language":"en",
     "country":"US",
-    "lookup":{  
+    "lookup":{
         "global":"TVWhu0iwQhKJyuhpT_2yMw"
     },
     "url":"https://furiousfalcon.onfastspring.com/account"
 },
-"product":{  
+"product":{
     "product":"falcon-monthly-subscriptions",
     "parent":null,
-    "display":{  
+    "display":{
         "en":"Falcon Monthly Subscription"
     },
-    "description":{  
-        "summary":{  
+    "description":{
+        "summary":{
             "en":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
         },
-        "action":{  
+        "action":{
             "en":"CLICK TO SUBSCRIBE"
         },
-        "full":{  
+        "full":{
             "en":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel mi quam. Etiam non purus et est volutpat aliquet."
         }
     },
     "image":"https://d8y8nchqlnmka.cloudfront.net/VTetZH1kQD8/DHPIZXJ7Thw/falcon-box_x2.png",
     "sku":"furious10",
-    "fulfillments":{  
-        "instructions":{  
+    "fulfillments":{
+        "instructions":{
             "en":"Thank you for subscribing to *Falcon*.  To register, please launch the trial version and select **Help** | **Register Falcon**. Then, copy and paste the license key above into the **License Key** field and click **Submit**."
         },
-        "falcon-monthly-subscriptions_license_1":{  
+        "falcon-monthly-subscriptions_license_1":{
             "fulfillment":"falcon-monthly-subscriptions_license_1",
             "name":"License Generator (Pre-defined List)",
             "applicability":"NON_REBILL_ONLY"
         },
-        "falcon-monthly-subscriptions_file_0":{  
+        "falcon-monthly-subscriptions_file_0":{
             "fulfillment":"falcon-monthly-subscriptions_file_0",
             "name":"File Download (Falcon.exe)",
             "applicability":"NON_REBILL_ONLY"
         }
     },
     "format":"digital",
-    "attributes":{  
+    "attributes":{
         "CustomAttribute1":"CustomValue1",
         "CustomAttribute2":"CustomValue2"
     },
-    "pricing":{  
+    "pricing":{
         "renew":"auto",
         "interval":"month",
         "intervalLength":1,
         "quantityBehavior":"allow",
         "quantityDefault":1,
-        "price":{  
+        "price":{
             "USD":14.95
         },
         "dateLimitsEnabled":false,
-        "reminderNotification":{  
+        "reminderNotification":{
             "enabled":true,
             "interval":"DAY",
             "intervalLength":1
         },
-        "overdueNotification":{  
+        "overdueNotification":{
             "enabled":true,
             "interval":"WEEK",
             "intervalLength":1,
             "amount":2
         },
-        "cancellation":{  
+        "cancellation":{
             "interval":"WEEK",
             "intervalLength":1
         }
@@ -166,7 +166,7 @@
     "intervalUnit":"week",
     "intervalLength":1
 },
-"instructions":[  
+"instructions":[
     {
         "type":"regular",
         "periodStartDate":1532995200000,

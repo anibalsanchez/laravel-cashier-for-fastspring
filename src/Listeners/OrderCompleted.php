@@ -8,13 +8,8 @@ use Photalika\CashierForFastspring\Events;
 
 class OrderCompleted
 {
-    /**
-     * Handle the event.
-     */
     public function handle(Events\OrderCompleted $orderCompleted): void
     {
-        // Try to find that invoice on the database if not exists then create
-        // one
         $data = $orderCompleted->data;
         $subscription = $data['items'][0]['subscription'];
 
@@ -29,7 +24,6 @@ class OrderCompleted
 
         $billable = $orderCompleted->billable();
 
-        // fill the model
         $invoice->subscription_sequence = $subscription['sequence'];
         $invoice->billable_id = $billable->id;
         $invoice->billable_type = $billable->getMorphClass();
@@ -46,7 +40,6 @@ class OrderCompleted
         $invoice->subscription_period_start_date = date('Y-m-d H:i:s', $periodStartDate);
         $invoice->subscription_period_end_date = date('Y-m-d H:i:s', $periodEndDate);
 
-        // and save
         $invoice->save();
     }
 }

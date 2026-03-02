@@ -1,4 +1,4 @@
-{  
+{
 "order":"R6hr8F6USNixHu9fmdyjAw",
 "id":"R6hr8F6USNixHu9fmdyjAw",
 "reference":"FUR170801-8970-10118",
@@ -16,7 +16,7 @@
 "account":{
     "id":"{accountId}",
     "account":"{accountId}",
-    "contact":{  
+    "contact":{
         "first":"Leeroy",
         "last":"Jenkins",
         "email":"ne1@all.com",
@@ -25,7 +25,7 @@
     },
     "language":"en",
     "country":"US",
-    "lookup":{  
+    "lookup":{
         "global":"TVWhu0iwQhKJyuhpT_2yMw"
     },
     "url":"https://furiousfalcon.onfastspring.com/account"
@@ -51,20 +51,20 @@
 "discountWithTaxInPayoutCurrency":0.0,
 "discountWithTaxInPayoutCurrencyDisplay":"$0.00",
 "billDescriptor":"FS* fsprg.com",
-"payment":{                                                                  
+"payment":{
     "type":"test",
     "creditcard": "visa",
     "cardEnding": "4242",
     "bank": "sofort"
 },
-"customer":{  
+"customer":{
     "first":"Leeroy",
     "last":"Jenkins",
     "email":"ne1@all.com",
     "company":null,
     "phone":null
 },
-"address":{  
+"address":{
     "city":"Santa Barbara",
     "regionCode":"CA",
     "regionDisplay":"California",
@@ -73,11 +73,11 @@
     "country":"US",
     "display":"Santa Barbara, California, 93101, US"
 },
-"notes":[  
+"notes":[
 
 ],
-"items":[  
-    {  
+"items":[
+    {
         "product":"falcon-monthly-subscriptions",
         "quantity":1,
         "display":"Falcon Monthly Subscription",
@@ -86,7 +86,7 @@
         "subtotalDisplay":"$14.95",
         "subtotalInPayoutCurrency":14.95,
         "subtotalInPayoutCurrencyDisplay":"$14.95",
-        "attributes":{  
+        "attributes":{
             "CustomAttribute1":"CustomValue1",
             "CustomAttribute2":"CustomValue2"
         },
@@ -94,7 +94,7 @@
         "discountDisplay":"$0.00",
         "discountInPayoutCurrency":0.0,
         "discountInPayoutCurrencyDisplay":"$0.00",
-        "subscription":{  
+        "subscription":{
             "id":"ttyyWWxQRv-P0WXUYXphzg",
             "subscription":"ttyyWWxQRv-P0WXUYXphzg",
             "active":true,
@@ -124,7 +124,7 @@
             "subtotalDisplay":"$14.95",
             "subtotalInPayoutCurrency":14.95,
             "subtotalInPayoutCurrencyDisplay":"$14.95",
-            "attributes":{  
+            "attributes":{
             "CustomAttribute1":"CustomValue1",
             "CustomAttribute2":"CustomValue2"
             },
@@ -166,23 +166,23 @@
             "nextNotificationDateValue":1504137600000,
             "nextNotificationDateInSeconds":1504137600,
             "nextNotificationDateDisplay":"8/31/17",
-            "paymentReminder":{  
+            "paymentReminder":{
             "intervalUnit":"day",
             "intervalLength":1
             },
-            "paymentOverdue":{  
+            "paymentOverdue":{
             "intervalUnit":"week",
             "intervalLength":1,
             "total":2,
             "sent":0
             },
-            "cancellationSetting":{  
+            "cancellationSetting":{
             "cancellation":"AFTER_LAST_NOTIFICATION",
             "intervalUnit":"week",
             "intervalLength":1
             },
-            "instructions":[  
-            {  
+            "instructions":[
+            {
                 "type":"regular",
                 "periodStartDate":null,
                 "periodStartDateValue":null,
@@ -222,16 +222,16 @@
             }
             ]
         },
-        "fulfillments":{  
-            "falcon-monthly-subscriptions_license_1":[  
-            {  
+        "fulfillments":{
+            "falcon-monthly-subscriptions_license_1":[
+            {
                 "license":"dBm8tEqRQ24fEyKmvjmk",
                 "display":"License Key",
                 "type":"license"
             }
             ],
-            "falcon-monthly-subscriptions_file_0":[  
-            {  
+            "falcon-monthly-subscriptions_file_0":[
+            {
                 "display":"Falcon.exe",
                 "size":5769,
                 "file":"https://furiousfalcon.onfastspring.com/account/file/FUR170801-8970-87128F",
