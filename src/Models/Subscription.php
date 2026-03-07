@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Photalika\CashierForFastspring;
+namespace Photalika\CashierForFastspring\Models;
 
 use Carbon\Carbon;
 use Exception;
@@ -56,7 +56,7 @@ class Subscription extends Model
      */
     public function periods()
     {
-        return $this->hasMany(\Photalika\CashierForFastspring\SubscriptionPeriod::class);
+        return $this->hasMany(\Photalika\CashierForFastspring\Models\SubscriptionPeriod::class);
     }
 
     /**
@@ -64,7 +64,7 @@ class Subscription extends Model
      */
     public function activePeriod()
     {
-        return $this->hasOne(\Photalika\CashierForFastspring\SubscriptionPeriod::class)
+        return $this->hasOne(\Photalika\CashierForFastspring\Models\SubscriptionPeriod::class)
             ->where('start_date', '<=', Carbon::now()->format('Y-m-d H:i:s'))
             ->where('end_date', '>=', Carbon::now()->format('Y-m-d H:i:s'))
             ->where('type', $this->type());
@@ -75,7 +75,7 @@ class Subscription extends Model
      *
      * Note: This is not eloquent relation, it returns SubscriptionPeriod model directly.
      *
-     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\Models\SubscriptionPeriod
      */
     public function activePeriodOrCreate()
     {
@@ -89,7 +89,7 @@ class Subscription extends Model
     /**
      * Get active fastspring period or retrieve the active period from fastspring and create.
      *
-     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\Models\SubscriptionPeriod
      */
     public function activeFastspringPeriodOrCreate()
     {
@@ -115,7 +115,7 @@ class Subscription extends Model
     /**
      * Get active local period or create.
      *
-     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\Models\SubscriptionPeriod
      */
     public function activeLocalPeriodOrCreate()
     {
@@ -141,7 +141,7 @@ class Subscription extends Model
     /**
      * Create period with the information from fastspring.
      *
-     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\Models\SubscriptionPeriod
      */
     protected function createPeriodFromFastspring()
     {
@@ -171,7 +171,7 @@ class Subscription extends Model
      * If there is no subscription period, it creates a subscription period started today
      *
      *
-     * @return \Photalika\CashierForFastspring\SubscriptionPeriod
+     * @return \Photalika\CashierForFastspring\Models\SubscriptionPeriod
      *
      * @throws \Exception
      */

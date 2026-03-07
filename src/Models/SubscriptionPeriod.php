@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Photalika\CashierForFastspring;
+namespace Photalika\CashierForFastspring\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

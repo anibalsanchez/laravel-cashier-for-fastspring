@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Photalika\CashierForFastspring\Listeners;
 
 use Photalika\CashierForFastspring\Events;
-use Photalika\CashierForFastspring\SubscriptionPeriod;
+use Photalika\CashierForFastspring\Models\SubscriptionPeriod;
 
 class SubscriptionActivated
 {

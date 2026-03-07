@@ -3,10 +3,10 @@
 namespace Photalika\CashierForFastspring\Tests;
 
 use Orchestra\Testbench\TestCase;
-use Photalika\CashierForFastspring\Account;
 use Photalika\CashierForFastspring\Cashier;
-use Photalika\CashierForFastspring\Invoice;
-use Photalika\CashierForFastspring\Subscription;
+use Photalika\CashierForFastspring\Models\Account;
+use Photalika\CashierForFastspring\Models\Invoice;
+use Photalika\CashierForFastspring\Models\Subscription;
 use Photalika\CashierForFastspring\Tests\Traits\Database;
 use Photalika\CashierForFastspring\Tests\Traits\Model;
 

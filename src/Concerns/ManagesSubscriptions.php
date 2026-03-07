@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring\Concerns;
 
-use Photalika\CashierForFastspring\SubscriptionBuilder;
+use Photalika\CashierForFastspring\Helpers\SubscriptionBuilder;
 
 trait ManagesSubscriptions
 {
@@ -64,7 +64,7 @@ trait ManagesSubscriptions
      * Get a subscription instance by name.
      *
      * @param  string  $subscription
-     * @return \Photalika\CashierForFastspring\Subscription|null
+     * @return \Photalika\CashierForFastspring\Models\Subscription|null
      */
     public function subscription($subscription = 'default')
     {

@@ -7,7 +7,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Orchestra\Testbench\TestCase;
-use Photalika\CashierForFastspring\SubscriptionBuilder;
+use Photalika\CashierForFastspring\Helpers\SubscriptionBuilder;
 use Photalika\CashierForFastspring\Tests\Traits\Database;
 use Photalika\CashierForFastspring\Tests\Traits\Guzzle;
 use Photalika\CashierForFastspring\Tests\Traits\Model;

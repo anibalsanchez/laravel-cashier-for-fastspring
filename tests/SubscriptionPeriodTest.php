@@ -4,7 +4,7 @@ namespace Photalika\CashierForFastspring\Tests;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Orchestra\Testbench\TestCase;
-use Photalika\CashierForFastspring\SubscriptionPeriod;
+use Photalika\CashierForFastspring\Models\SubscriptionPeriod;
 use Photalika\CashierForFastspring\Tests\Traits\Database;
 use Photalika\CashierForFastspring\Tests\Traits\Model;
 

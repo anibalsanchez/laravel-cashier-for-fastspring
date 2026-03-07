@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Photalika\CashierForFastspring;
 
+use Photalika\CashierForFastspring\Models\Account;
+use Photalika\CashierForFastspring\Models\Invoice;
+use Photalika\CashierForFastspring\Models\Subscription;
+
 class Cashier
 {
     public const VERSION = '1.0.0';

@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Orchestra\Testbench\TestCase;
 use Photalika\CashierForFastspring\Events;
 use Photalika\CashierForFastspring\Fastspring\Fastspring;
-use Photalika\CashierForFastspring\Invoice;
 use Photalika\CashierForFastspring\Listeners;
-use Photalika\CashierForFastspring\Subscription;
+use Photalika\CashierForFastspring\Models\Invoice;
+use Photalika\CashierForFastspring\Models\Subscription;
 use Photalika\CashierForFastspring\Tests\Traits\Database;
 use Photalika\CashierForFastspring\Tests\Traits\Model;
 

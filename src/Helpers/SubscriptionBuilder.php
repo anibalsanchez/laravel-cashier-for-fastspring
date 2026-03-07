@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Photalika\CashierForFastspring;
+namespace Photalika\CashierForFastspring\Helpers;
 
 use GuzzleHttp\Exception\ClientException;
 use Photalika\CashierForFastspring\Fastspring\Fastspring;
