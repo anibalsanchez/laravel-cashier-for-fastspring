@@ -6,7 +6,14 @@ namespace Photalika\CashierForFastspring;
 
 class Cashier
 {
-    const VERSION = '1.0.0';
+    public const VERSION = '1.0.0';
+
+    /**
+     * The custom currency formatter.
+     *
+     * @var callable
+     */
+    public static $formatCurrencyUsing;
 
     /**
      * The customer model class name.

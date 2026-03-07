@@ -434,6 +434,7 @@ This project is based on:
 - <https://github.com/weDevsOfficial/laravel-cashier-fastspring>
 - <https://github.com/22digital/laravel-cashier-fastspring>
 - <https://github.com/bgultekin/cashier-fastspring>
+- <https://github.com/laravel/cashier-paddle>
 
 ## License
 
