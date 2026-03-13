@@ -14,15 +14,40 @@ use Illuminate\Support\ServiceProvider;
 class CashierServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application events.
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/fastspring.php',
+            'fastspring'
+        );
+    }
+
+    /**
+     * Bootstrap any package services.
      */
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->bootPublishing();
+    }
 
+    /**
+     * Boot the package migrations.
+     */
+    protected function bootMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+    }
+
+    /**
+     * Boot the package's publishable resources.
+     */
+    protected function bootPublishing(): void
+    {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/fastspring.php' => config_path('fastspring.php'),
+                __DIR__.'/../config/fastspring.php' => $this->app->configPath('fastspring.php'),
             ], 'fastspring-config');
 
             $this->publishes([
@@ -32,16 +57,5 @@ class CashierServiceProvider extends ServiceProvider
                 __DIR__.'/../database/migrations/2026_02_28_000004_create_accounts_table.php' => database_path('migrations/2026_02_28_000004_create_accounts_table.php'),
             ], 'fastspring-migrations');
         }
-    }
-
-    /**
-     * Register the service provider.
-     */
-    public function register(): void
-    {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/fastspring.php',
-            'fastspring'
-        );
     }
 }
