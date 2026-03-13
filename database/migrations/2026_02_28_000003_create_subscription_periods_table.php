@@ -16,8 +16,8 @@ return new class extends Migration
             $blueprint->unsignedBigInteger('subscription_id');
 
             $blueprint->string('type');
-            $blueprint->timestamp('start_date');
-            $blueprint->timestamp('end_date');
+            $blueprint->timestamp('start_date')->nullable();
+            $blueprint->timestamp('end_date')->nullable();
             $blueprint->timestamps();
 
             $blueprint->foreign('subscription_id')
