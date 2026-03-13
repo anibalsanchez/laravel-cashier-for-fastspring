@@ -610,4 +610,49 @@ class SubscriptionTest extends TestCase
         $this->assertFalse($localSubscription->isFastspring());
         $this->assertTrue($localSubscription->isLocal());
     }
+
+    public function test_recurring(): void
+    {
+        $user = $this->createUser(['fastspring_id' => 'fastspring_id']);
+
+        $subscription = $this->createSubscription($user, ['state' => 'active']);
+        $this->assertTrue($subscription->recurring());
+
+        $canceledSubscription = $this->createSubscription($user, ['state' => 'canceled']);
+        $this->assertFalse($canceledSubscription->recurring());
+
+        $deactivatedSubscription = $this->createSubscription($user, ['state' => 'deactivated']);
+        $this->assertFalse($deactivatedSubscription->recurring());
+    }
+
+    public function test_swap_on_trial_with_prorate(): void
+    {
+        $this->setMockResponsesAndHistory([
+            new Response(200, [], json_encode([
+                'subscriptions' => [
+                    [
+                        'subscription' => 'fastspring_id',
+                        'result' => 'success',
+                    ],
+                ],
+            ])),
+        ]);
+
+        $user = $this->createUser([
+            'fastspring_id' => 'fastspring_id',
+        ]);
+
+        $subscription = $this->createSubscription($user, ['fastspring_id' => 'fastspring_id', 'state' => 'trial']);
+
+        $activePeriod = $this->createSubscriptionPeriod($subscription, [
+            'start_date' => Carbon::now()->subDays(14)->format('Y-m-d'),
+            'end_date' => Carbon::now()->addDays(16)->format('Y-m-d'),
+            'type' => 'fastspring',
+        ]);
+
+        $subscription->swap('new_plan', true);
+
+        $this->assertEquals($subscription->plan, 'new_plan');
+        $this->assertNull(\Photalika\CashierForFastspring\Models\SubscriptionPeriod::find($activePeriod->id));
+    }
 }

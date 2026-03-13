@@ -109,6 +109,26 @@ class ListenersTest extends TestCase
         $this->assertEquals($subscription->state, $data['state']);
     }
 
+    public function test_subscription_deactivated_listener(): void
+    {
+        $user = $this->createUser(['fastspring_id' => 'fastspring_account_id']);
+        $subscription = $this->createSubscription($user, ['fastspring_id' => 'fastspring_subscription_id']);
+
+        // retrieved from fastspring's doc
+        $data = $this->payloadOfSubscriptionDeactivated('fastspring_account_id', 'fastspring_subscription_id');
+
+        $subscriptionDeactivated = new Events\SubscriptionDeactivated('id', 'subscription.deactivated', true, true, time(), $data);
+        $subscriptionStateChanged = new Listeners\SubscriptionStateChanged;
+        $subscriptionStateChanged->handle($subscriptionDeactivated);
+
+        $subscription = Subscription::where('fastspring_id', $data['id'])->first();
+        $this->assertNotNull($subscription);
+        $this->assertEquals($subscription->state, $data['state']);
+        $this->assertEquals($subscription->plan, $data['product']['product']);
+        $this->assertEquals($subscription->currency, $data['currency']);
+        $this->assertEquals($subscription->quantity, $data['quantity']);
+    }
+
     /**
      * Payload from fastspring.
      */

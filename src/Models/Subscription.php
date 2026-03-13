@@ -340,6 +340,11 @@ class Subscription extends Model
         return $this->type() === 'fastspring';
     }
 
+    public function recurring(): bool
+    {
+        return $this->active() && ! $this->onGracePeriod();
+    }
+
     /**
      * Swap the subscription to a new Fastspring plan.
      *

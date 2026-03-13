@@ -21,7 +21,7 @@ class SubscriptionChargeCompleted
         ]);
 
         $subscriptionModel = \Photalika\CashierForFastspring\Cashier::$subscriptionModel;
-        $subscription = $subscriptionModel::where('fastspring_id', $data['subscription']['id'])->first();
+        $subscription = $subscriptionModel::where('fastspring_id', $data['subscription']['id'])->firstOrFail();
 
         $nextDate = Carbon::createFromTimestampUTC($data['subscription']['nextInSeconds']);
         $periodEndDate = $nextDate->subDay()->format('Y-m-d H:i:s');
