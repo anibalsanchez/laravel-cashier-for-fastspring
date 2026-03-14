@@ -34,6 +34,7 @@ class SubscriptionChargeCompleted
         $invoice->subscription_sequence = $data['subscription']['sequence'];
         $invoice->billable_id = $billable->id;
         $invoice->billable_type = $billable->getMorphClass();
+        $invoice->subscription_id = $subscription->id;
         $invoice->subscription_display = $data['subscription']['display'];
         $invoice->subscription_product = $data['subscription']['product'];
         $invoice->invoice_url = $data['order']['invoiceUrl'];

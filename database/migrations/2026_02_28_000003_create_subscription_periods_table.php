@@ -24,6 +24,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('subscriptions')
                 ->onDelete('cascade');
+
             $blueprint->unique([
                 'subscription_id',
                 'type',

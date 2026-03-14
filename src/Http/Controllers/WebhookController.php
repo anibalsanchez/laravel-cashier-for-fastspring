@@ -33,6 +33,10 @@ class WebhookController extends Controller
     {
         $payload = json_decode($request->getContent(), true);
 
+        if (! $payload) {
+            return new Response('Not Acceptable', Response::HTTP_NOT_ACCEPTABLE);
+        }
+
         // keep id of successfully managed events
         $successfulEvents = [];
 

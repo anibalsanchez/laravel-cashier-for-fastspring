@@ -98,6 +98,7 @@ trait Database
             $table->string('billable_type');
             $table->string('fastspring_id')->unique()->nullable();
             $table->string('type')->nullable(); // subscription, order
+            $table->foreignId('subscription_id')->nullable();
             $table->string('subscription_display')->nullable();
             $table->string('subscription_product')->nullable();
             $table->integer('subscription_sequence')->nullable();

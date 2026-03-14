@@ -154,6 +154,20 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
+     * Test 406 Not Acceptable.
+     */
+    public function test_406_not_acceptable(): void
+    {
+        $request = Request::create('/', 'POST', [], [], [], [], 'plain text content');
+        $request->headers->set('Content-Type', 'text/plain');
+
+        $webhookControllerTestStub = new WebhookControllerTestStub;
+        $response = $webhookControllerTestStub->handleWebhook($request);
+
+        $this->assertEquals($response->getStatusCode(), 406);
+    }
+
+    /**
      * Webhook test events.
      */
     public function test_webhooks_events(): void

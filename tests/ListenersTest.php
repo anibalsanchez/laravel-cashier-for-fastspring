@@ -41,7 +41,9 @@ class ListenersTest extends TestCase
      */
     public function test_order_complete_listener(): void
     {
-        $this->createUser(['fastspring_id' => 'fastspring_id']);
+        $user = $this->createUser(['fastspring_id' => 'fastspring_id']);
+        $this->createSubscription($user, ['fastspring_id' => 'ttyyWWxQRv-P0WXUYXphzg']);
+
         // retrieved from fastspring's doc
         $data = $this->payloadOfOrderCompleted('fastspring_id');
 

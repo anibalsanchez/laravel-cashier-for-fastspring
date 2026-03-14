@@ -18,6 +18,7 @@ return new class extends Migration
 
             $blueprint->string('fastspring_id')->unique();
             $blueprint->string('type')->nullable();
+            $blueprint->foreignId('subscription_id')->nullable();
             $blueprint->string('subscription_display')->nullable();
             $blueprint->string('subscription_product')->nullable();
             $blueprint->integer('subscription_sequence')->nullable();
@@ -34,6 +35,8 @@ return new class extends Migration
             $blueprint->timestamps();
 
             $blueprint->index(['billable_id', 'billable_type']);
+            $blueprint->index(['fastspring_id', 'type']);
+            $blueprint->index(['subscription_id']);
         });
     }
 };

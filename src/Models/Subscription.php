@@ -59,6 +59,11 @@ class Subscription extends Model
         return $this->hasMany(\Photalika\CashierForFastspring\Models\SubscriptionPeriod::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(\Photalika\CashierForFastspring\Models\Invoice::class);
+    }
+
     /**
      * Get active period of the subscription.
      */

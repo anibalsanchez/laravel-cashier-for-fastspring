@@ -29,6 +29,7 @@ return new class extends Migration
             $blueprint->timestamps();
 
             $blueprint->index(['billable_id', 'billable_type']);
+            $blueprint->index(['fastspring_id']);
         });
     }
 };

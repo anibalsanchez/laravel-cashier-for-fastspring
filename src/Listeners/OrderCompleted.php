@@ -11,7 +11,7 @@ class OrderCompleted
     public function handle(Events\OrderCompleted $orderCompleted): void
     {
         $data = $orderCompleted->data;
-        $subscription = $data['items'][0]['subscription'];
+        $eventSubscription = $data['items'][0]['subscription'];
 
         $invoiceModel = \Photalika\CashierForFastspring\Cashier::$invoiceModel;
         $invoice = $invoiceModel::firstOrNew([
@@ -19,16 +19,20 @@ class OrderCompleted
             'type' => 'subscription',
         ]);
 
-        $periodStartDate = $subscription['nextInSeconds'];
-        $periodEndDate = $subscription['beginInSeconds'];
+        $periodStartDate = $eventSubscription['nextInSeconds'];
+        $periodEndDate = $eventSubscription['beginInSeconds'];
 
         $billable = $orderCompleted->billable();
 
-        $invoice->subscription_sequence = $subscription['sequence'];
+        $subscriptionModel = \Photalika\CashierForFastspring\Cashier::$subscriptionModel;
+        $subscription = $subscriptionModel::where('fastspring_id', $eventSubscription['id'])->firstOrFail();
+
+        $invoice->subscription_id = $subscription->id;
+        $invoice->subscription_sequence = $eventSubscription['sequence'];
         $invoice->billable_id = $billable->id;
         $invoice->billable_type = $billable->getMorphClass();
-        $invoice->subscription_display = $subscription['display'];
-        $invoice->subscription_product = $subscription['product'];
+        $invoice->subscription_display = $eventSubscription['display'];
+        $invoice->subscription_product = $eventSubscription['product'];
         $invoice->invoice_url = $data['invoiceUrl'];
         $invoice->total = $data['total'];
         $invoice->tax = $data['tax'];
