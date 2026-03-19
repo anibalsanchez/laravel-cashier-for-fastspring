@@ -1,6 +1,6 @@
 <?php
 
-namespace Photalika\CashierForFastspring\Tests;
+namespace Photalika\CashierForFastspring\Tests\Fastspring;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -13,7 +13,7 @@ use Photalika\CashierForFastspring\Fastspring\Fastspring;
  * This class just tests if fastspring class works as php code and receive mocked responses.
  * It does not test compability of requests to fastspring API.
  */
-class FastspringTest extends TestCase
+class ApiClientTest extends TestCase
 {
     public $fastspring;
 
@@ -162,6 +162,13 @@ class FastspringTest extends TestCase
     public function test_get_account_management_uri(): void
     {
         $response = $this->fastspring->getAccountManagementURI('id');
+
+        $this->assertObjectHasProperty('hello', $response);
+    }
+
+    public function test_get_account_management_url(): void
+    {
+        $response = $this->fastspring->getAccountManagementURL('id');
 
         $this->assertObjectHasProperty('hello', $response);
     }

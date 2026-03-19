@@ -315,6 +315,17 @@ class ApiClient
     }
 
     /**
+     * Get authenticated url of fastspring account management panel.
+     *
+     * @param  string|int  $accountId  ID of the account
+     * @return object Response of fastspring
+     */
+    public function getAccountManagementURL($accountId): mixed
+    {
+        return $this->apiRequest('GET', implode('/', ['accounts', $accountId, 'authenticate']), [], [], []);
+    }
+
+    /**
      * Swap subscription to another plan.
      *
      * @param  string|int  $subscriptionId  ID of the subscription

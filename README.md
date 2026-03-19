@@ -35,7 +35,7 @@
 
 ## Introduction
 
-Cashier For Fastspring is a cashier-like laravel package which provides interface to [Fastspring](https://fastspring.com) subscription and payment services. This package handles webhooks and provides a simple API for Fastspring. Before using this package, looking at [Fastspring documentation](https://developer.fastspring.com/docs/) is strongly recommended.
+Cashier For Fastspring is a cashier-like laravel package which provides interface to [Fastspring](https://fastspring.com) subscription and payment services. This package handles webhooks and provides a simple API for Fastspring. Before using this package, looking at [Fastspring documentation](https://developer.fastspring.com/docs/) and the [API overview](https://developer.fastspring.com/reference/getting-started-with-your-api) is strongly recommended.
 
 ## Installation
 
