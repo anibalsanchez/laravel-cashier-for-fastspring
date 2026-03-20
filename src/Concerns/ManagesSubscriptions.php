@@ -14,9 +14,9 @@ trait ManagesSubscriptions
      * @param  string  $subscription  Subscription name
      * @param  string  $plan  The plan name
      */
-    public function newSubscription($subscription, $plan): SubscriptionBuilder
+    public function newSubscription($subscription): SubscriptionBuilder
     {
-        return new SubscriptionBuilder($this, $subscription, $plan);
+        return new SubscriptionBuilder($this, $subscription);
     }
 
     /**

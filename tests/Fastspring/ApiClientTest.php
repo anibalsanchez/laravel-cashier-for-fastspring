@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use Orchestra\Testbench\TestCase;
 use Photalika\CashierForFastspring\Fastspring\ApiClient;
 use Photalika\CashierForFastspring\Fastspring\Fastspring;
+use Photalika\CashierForFastspring\Models\Session;
 
 /**
  * This class just tests if fastspring class works as php code and receive mocked responses.
@@ -26,11 +27,26 @@ class ApiClientTest extends TestCase
     {
         parent::setUp();
 
+        $sessionPayload = [
+            'id' => 'gNFgV9ITTbyylJkiIhnmOQ',
+            'currency' => 'USD',
+            'expires' => 1731469407156,
+            'order' => null,
+            'account' => 'abCdE1FGH2Hij3KLMnOpqR',
+            'subtotal' => 399.99,
+            'items' => [
+                [
+                    'product' => 'basic-laptop',
+                    'quantity' => 1,
+                ],
+            ],
+        ];
+
         // prepare class for testing
         $mockHandler = new MockHandler(array_fill(
             0,
             20,
-            new Response(200, [], json_encode(['hello' => 'world']))
+            new Response(200, [], json_encode($sessionPayload))
         ));
 
         $handlerStack = HandlerStack::create($mockHandler);
@@ -79,97 +95,98 @@ class ApiClientTest extends TestCase
             ['json' => 'payload']
         );
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_create_account(): void
     {
         $response = $this->fastspring->createAccount([]);
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_update_account(): void
     {
         $response = $this->fastspring->updateAccount('id', []);
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_get_subscriptions(): void
     {
         $response = $this->fastspring->getSubscriptions([]);
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_get_accounts(): void
     {
         $response = $this->fastspring->getAccounts([]);
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_get_orders(): void
     {
         $response = $this->fastspring->getOrders([]);
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_get_account(): void
     {
         $response = $this->fastspring->getAccount('id');
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_create_session(): void
     {
-        $response = $this->fastspring->createSession([]);
+        $session = new Session($this->fastspring->createSession([]));
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertInstanceOf(Session::class, $session);
+        $this->assertEquals('gNFgV9ITTbyylJkiIhnmOQ', $session->id);
     }
 
     public function test_update_subscriptions(): void
     {
         $response = $this->fastspring->updateSubscriptions([]);
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_cancel_subscription(): void
     {
         $response = $this->fastspring->cancelSubscription('id');
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_uncancel_subscription(): void
     {
         $response = $this->fastspring->uncancelSubscription('id');
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_swap_subscription(): void
     {
         $response = $this->fastspring->swapSubscription('id', 'new_plan', true);
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_get_account_management_uri(): void
     {
         $response = $this->fastspring->getAccountManagementURI('id');
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 
     public function test_get_account_management_url(): void
     {
         $response = $this->fastspring->getAccountManagementURL('id');
 
-        $this->assertObjectHasProperty('hello', $response);
+        $this->assertObjectHasProperty('id', $response);
     }
 }

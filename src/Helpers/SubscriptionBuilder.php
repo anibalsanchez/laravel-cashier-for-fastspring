@@ -6,19 +6,13 @@ namespace Photalika\CashierForFastspring\Helpers;
 
 use GuzzleHttp\Exception\ClientException;
 use Photalika\CashierForFastspring\Fastspring\Fastspring;
+use Photalika\CashierForFastspring\Models\Session;
 
 /**
  * Front-end to create subscription objects step by step.
  */
 class SubscriptionBuilder
 {
-    /**
-     * The quantity of the subscription.
-     *
-     * @var int
-     */
-    protected $quantity = 1;
-
     /**
      * The coupon code being applied to the billable.
      *
@@ -27,11 +21,38 @@ class SubscriptionBuilder
     protected $coupon;
 
     /**
+     * The contact details for the session.
+     *
+     * @var array|null
+     */
+    protected $contact;
+
+    /**
+     * The lookup details for the session.
+     *
+     * @var array|null
+     */
+    protected $lookup;
+
+    /**
+     * The items for the session.
+     *
+     * @var array
+     */
+    protected $items = [];
+
+    /**
+     * The tags for the session.
+     *
+     * @var array
+     */
+    protected $tags = [];
+
+    /**
      * Create a new subscription builder instance.
      *
      * @param  mixed  $owner  Owner details
      * @param  string  $name  Plan name
-     * @param  string  $plan  Plan
      * @return void
      */
     public function __construct(
@@ -42,25 +63,8 @@ class SubscriptionBuilder
         /**
          * The name of the subscription.
          */
-        protected $name,
-        /**
-         * The name of the plan being subscribed to.
-         */
-        protected $plan
+        protected $name
     ) {}
-
-    /**
-     * Specify the quantity of the subscription.
-     *
-     * @param  int  $quantity  Number of items
-     * @return $this
-     */
-    public function quantity($quantity): static
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
 
     /**
      * The coupon to apply to a new subscription.
@@ -76,15 +80,75 @@ class SubscriptionBuilder
     }
 
     /**
+     * The contact to apply to a new subscription.
+     *
+     * @param  array  $contact
+     * @return $this
+     */
+    public function withContact($contact): static
+    {
+        $this->contact = $contact;
+
+        return $this;
+    }
+
+    /**
+     * The lookup to apply to a new subscription.
+     *
+     * @param  array  $lookup
+     * @return $this
+     */
+    public function withLookup($lookup): static
+    {
+        $this->lookup = $lookup;
+
+        return $this;
+    }
+
+    /**
+     * Add an item to the session.
+     *
+     * @param  string  $product
+     * @param  int  $quantity
+     * @param  array|null  $pricing
+     * @param  array|null  $attributes
+     * @return $this
+     */
+    public function addItem($product, $quantity = 1, $pricing = null, $attributes = null): static
+    {
+        $this->items[] = array_filter([
+            'product' => $product,
+            'quantity' => $quantity,
+            'pricing' => $pricing,
+            'attributes' => $attributes,
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * The tags to apply to a new subscription.
+     *
+     * @param  array  $tags
+     * @return $this
+     */
+    public function withTags($tags): static
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    /**
      * Create a new Fastspring session and return it as object.
      *
      * @return \Photalika\CashierForFastspring\Fastspring\Fastspring
      */
-    public function create()
+    public function create(): Session
     {
         $fastspringId = $this->getFastspringIdOfBillable();
 
-        return Fastspring::createSession($this->buildPayload($fastspringId));
+        return new Session(Fastspring::createSession($this->buildPayload($fastspringId)));
     }
 
     /**
@@ -141,15 +205,10 @@ class SubscriptionBuilder
     {
         return array_filter([
             'account' => $fastspringId,
-            'items' => [
-                [
-                    'product' => $this->plan,
-                    'quantity' => $this->quantity,
-                ],
-            ],
-            'tags' => [
-                'name' => $this->name,
-            ],
+            'contact' => $this->contact,
+            'lookup' => $this->lookup,
+            'items' => $this->items,
+            'tags' => array_merge($this->tags, ['name' => $this->name]),
             'coupon' => $this->coupon,
         ]);
     }

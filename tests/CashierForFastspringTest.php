@@ -45,20 +45,33 @@ class CashierForFastspringTest extends TestCase
      */
     public function test_subscription_builder_can_be_constructed(): void
     {
-        $this->assertInstanceOf(SubscriptionBuilder::class, new SubscriptionBuilder('owner', 'name', 'plan'));
+        $this->assertInstanceOf(SubscriptionBuilder::class, new SubscriptionBuilder('owner', 'name'));
     }
 
     public function test_create_session(): void
     {
         $this->setMockResponsesAndHistory([
-            new Response(200, [], json_encode(['id' => 'session_id'])),
+            new Response(200, [], json_encode([
+                'id' => 'gNFgV9ITTbyylJkiIhnmOQ',
+                'currency' => 'USD',
+                'expires' => 1731469407156,
+                'order' => null,
+                'account' => 'abCdE1FGH2Hij3KLMnOpqR',
+                'subtotal' => 399.99,
+                'items' => [
+                    [
+                        'product' => 'basic-laptop',
+                        'quantity' => 1,
+                    ],
+                ],
+            ])),
         ]);
 
         $user = $this->createUser([
             'fastspring_id' => 'fastspring_id',
         ]);
 
-        $session = $user->newSubscription('main', 'starter-plan')->create();
+        $session = $user->newSubscription('main')->addItem('starter-plan')->create();
 
         $this->assertObjectHasProperty('id', $session);
     }
@@ -68,21 +81,176 @@ class CashierForFastspringTest extends TestCase
         $transactions = [];
         $history = Middleware::history($transactions);
         $this->setMockResponsesAndHistory([
-            new Response(200, [], json_encode(['id' => 'session_id'])),
+            new Response(200, [], json_encode([
+                'id' => 'gNFgV9ITTbyylJkiIhnmOQ',
+                'currency' => 'USD',
+                'expires' => 1731469407156,
+                'order' => null,
+                'account' => 'abCdE1FGH2Hij3KLMnOpqR',
+                'subtotal' => 399.99,
+                'items' => [
+                    [
+                        'product' => 'basic-laptop',
+                        'quantity' => 1,
+                    ],
+                ],
+            ])),
         ], $history);
 
         $user = $this->createUser([
             'fastspring_id' => 'fastspring_id',
         ]);
 
-        $session = $user->newSubscription('main', 'starter-plan')->withCoupon('free-php-coupon')->quantity(1)->create();
+        $session = $user->newSubscription('main')
+            ->addItem('starter-plan', 1)
+            ->withCoupon('free-php-coupon')
+            ->create();
 
         $body = (string) $transactions[0]['request']->getBody();
         $requestParameters = json_decode($body, true);
 
+        $this->assertEquals('starter-plan', $requestParameters['items'][0]['product']);
         $this->assertEquals(1, $requestParameters['items'][0]['quantity']);
         $this->assertEquals('main', $requestParameters['tags']['name']);
         $this->assertEquals('free-php-coupon', $requestParameters['coupon']);
+        $this->assertObjectHasProperty('id', $session);
+    }
+
+    public function test_create_session_with_full_payload(): void
+    {
+        $transactions = [];
+        $history = Middleware::history($transactions);
+        $this->setMockResponsesAndHistory([
+            new Response(200, [], json_encode([
+                'id' => 'gNFgV9ITTbyylJkiIhnmOQ',
+                'currency' => 'USD',
+                'expires' => 1731469407156,
+                'order' => null,
+                'account' => 'abCdE1FGH2Hij3KLMnOpqR',
+                'subtotal' => 399.99,
+                'items' => [
+                    [
+                        'product' => 'basic-laptop',
+                        'quantity' => 1,
+                    ],
+                ],
+            ])),
+        ], $history);
+
+        $user = $this->createUser([
+            'fastspring_id' => 'fastspring_id',
+        ]);
+
+        $contact = [
+            'first' => 'Jane',
+            'last' => 'Doe',
+            'email' => 'jane.doe@example.com',
+            'company' => 'TechCorp',
+            'phone' => '1234567890',
+            'country' => 'US',
+            'language' => 'en',
+        ];
+
+        $lookup = [
+            'custom' => 'customKey123',
+        ];
+
+        $pricing = [
+            'price' => [
+                'USD' => 399.99,
+            ],
+        ];
+
+        $session = $user->newSubscription('main')
+            ->addItem('starter-plan', 1, $pricing)
+            ->withContact($contact)
+            ->withLookup($lookup)
+            ->create();
+
+        $body = (string) $transactions[0]['request']->getBody();
+        $requestParameters = json_decode($body, true);
+
+        $this->assertEquals($contact, $requestParameters['contact']);
+        $this->assertEquals($lookup, $requestParameters['lookup']);
+        $this->assertEquals($pricing, $requestParameters['items'][0]['pricing']);
+        $this->assertObjectHasProperty('id', $session);
+    }
+
+    public function test_create_session_with_complex_payload(): void
+    {
+        $transactions = [];
+        $history = Middleware::history($transactions);
+        $this->setMockResponsesAndHistory([
+            new Response(200, [], json_encode([
+                'id' => 'gNFgV9ITTbyylJkiIhnmOQ',
+                'currency' => 'USD',
+                'expires' => 1731469407156,
+                'order' => null,
+                'account' => 'abCdE1FGH2Hij3KLMnOpqR',
+                'subtotal' => 399.99,
+                'items' => [
+                    [
+                        'product' => 'basic-laptop',
+                        'quantity' => 1,
+                    ],
+                ],
+            ])),
+        ], $history);
+
+        $user = $this->createUser([
+            'fastspring_id' => 'fastspring_id',
+        ]);
+
+        $tags = [
+            'TagKey1' => 'TagValue1',
+            'TagKey2' => 'TagValue2',
+        ];
+
+        $pricing = [
+            'trial' => 0,
+            'paymentCollected' => true,
+            'paidTrial' => false,
+            'renew' => 'auto',
+            'interval' => 'month',
+            'intervalLength' => 1,
+            'quantityBehavior' => 'allow',
+            'quantityDefault' => 1,
+            'price' => [
+                'USD' => 399.99,
+                'EUR' => 384.36,
+            ],
+            'discountType' => 'percent',
+            'discountDuration' => 2,
+            'quantityDiscounts' => [
+                '1' => 50,
+            ],
+        ];
+
+        $attributes1 = [
+            'AttributeKey1' => 'AttributeValue1',
+            'AttributeKey2' => 'AttributeValue2',
+        ];
+
+        $attributes2 = [
+            'ATTRIBUTE1' => 'value1',
+        ];
+
+        $session = $user->newSubscription('main')
+            ->withTags($tags)
+            ->addItem('product-path', 1, null, $attributes1)
+            ->addItem('some-monthly-subscription', 1, $pricing, $attributes2)
+            ->create();
+
+        $body = (string) $transactions[0]['request']->getBody();
+        $requestParameters = json_decode($body, true);
+
+        $this->assertEquals($tags['TagKey1'], $requestParameters['tags']['TagKey1']);
+        $this->assertEquals('main', $requestParameters['tags']['name']);
+        $this->assertEquals('product-path', $requestParameters['items'][0]['product']);
+        $this->assertEquals($attributes1, $requestParameters['items'][0]['attributes']);
+        $this->assertEquals('some-monthly-subscription', $requestParameters['items'][1]['product']);
+        $this->assertEquals($pricing, $requestParameters['items'][1]['pricing']);
+        $this->assertEquals($attributes2, $requestParameters['items'][1]['attributes']);
         $this->assertObjectHasProperty('id', $session);
     }
 
@@ -104,14 +272,27 @@ class CashierForFastspringTest extends TestCase
     {
         $this->setMockResponsesAndHistory([
             new Response(200, [], json_encode(['account' => 'fastspring_id'])),
-            new Response(200, [], json_encode(['hello' => 'world'])),
+            new Response(200, [], json_encode([
+                'id' => 'gNFgV9ITTbyylJkiIhnmOQ',
+                'currency' => 'USD',
+                'expires' => 1731469407156,
+                'order' => null,
+                'account' => 'abCdE1FGH2Hij3KLMnOpqR',
+                'subtotal' => 399.99,
+                'items' => [
+                    [
+                        'product' => 'basic-laptop',
+                        'quantity' => 1,
+                    ],
+                ],
+            ])),
         ]);
 
         $user = $this->createUser();
 
-        $session = $user->newSubscription('main', 'starter-plan')->create();
+        $session = $user->newSubscription('main')->addItem('starter-plan')->create();
 
-        $this->assertObjectHasProperty('hello', $session);
+        $this->assertObjectHasProperty('id', $session);
         $this->assertEquals($user->account->fastspring_id, 'fastspring_id');
     }
 
@@ -127,14 +308,27 @@ class CashierForFastspringTest extends TestCase
                 ['id' => 'fastspring_id'],
             ],
             ])),
-            new Response(200, [], json_encode(['hello' => 'world'])),
+            new Response(200, [], json_encode([
+                'id' => 'gNFgV9ITTbyylJkiIhnmOQ',
+                'currency' => 'USD',
+                'expires' => 1731469407156,
+                'order' => null,
+                'account' => 'abCdE1FGH2Hij3KLMnOpqR',
+                'subtotal' => 399.99,
+                'items' => [
+                    [
+                        'product' => 'basic-laptop',
+                        'quantity' => 1,
+                    ],
+                ],
+            ])),
         ]);
 
         $user = $this->createUser();
 
-        $session = $user->newSubscription('main', 'starter-plan')->create();
+        $session = $user->newSubscription('main')->addItem('starter-plan')->create();
 
-        $this->assertObjectHasProperty('hello', $session);
+        $this->assertObjectHasProperty('id', $session);
         $this->assertEquals($user->account->fastspring_id, 'fastspring_id');
     }
 
